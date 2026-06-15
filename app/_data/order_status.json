@@ -1,0 +1,8 @@
+{
+  "pending": { "value": "pending",   "label": "En attente",     "color": "yellow" },
+  "confirmed": { "value": "confirmed", "label": "Confirmée",      "color": "blue"   },
+  "shipped": { "value": "shipped",   "label": "Expédiée",      "color": "indigo" },
+  "delivered": { "value": "delivered", "label": "Livrée",         "color": "green"  },
+  "cancelled": { "value": "cancelled", "label": "Annulée",        "color": "red"    },
+  "refunded": { "value": "refunded",  "label": "Remboursée",    "color": "gray"   }
+}

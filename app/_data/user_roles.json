@@ -1,0 +1,12 @@
+{
+  "user": {
+    "value": "user",
+    "label": "Utilisateur",
+    "description": "Peut consulter les produits et gérer ses propres commandes"
+  },
+  "admin": {
+    "value": "admin",
+    "label": "Administrateur",
+    "description": "Accès complet : gestion des produits, commandes et utilisateurs"
+  }
+}

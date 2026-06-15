@@ -3,6 +3,7 @@ import { StorageImage } from "../_interfaces/storage";
 import { app } from "@/app/_providers/FirebaseProvider";
 import { Timestamp, DocumentReference, getFirestore, collectionGroup, query, where, getDocs } from "firebase/firestore";
 import { CreateUserData, UpdateUserData, User } from "../_models/user";
+import USER_ROLES from "@/app/_data/user_roles.json";
 import { uploadImageToStorage, deleteFileFromStorage } from "@/app/_services/StorageService";
 import {
   getDocument,
@@ -133,5 +134,35 @@ export default class UserRepository {
 
     // 2. Supprimer le document Firestore
     await this.deleteUser(userId);
+  }
+
+  // ROLE =========================================================
+  static async getUserRole(userId: string): Promise<keyof typeof USER_ROLES> {
+    const user = await this.getUserById(userId);
+    return user?.role ?? "user";
+  }
+
+  static async getCurrentUserRole(): Promise<keyof typeof USER_ROLES> {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return "user";
+    return this.getUserRole(currentUser.uid);
+  }
+
+  static async isAdmin(userId?: string): Promise<boolean> {
+    const id = userId ?? auth.currentUser?.uid;
+    if (!id) return false;
+    const role = await this.getUserRole(id);
+    return role === "admin";
+  }
+
+  static async setUserRole(userId: string, role: keyof typeof USER_ROLES): Promise<void> {
+    if (!auth.currentUser) throw new Error("Utilisateur non authentifié");
+    const callerIsAdmin = await this.isAdmin(auth.currentUser.uid);
+    if (!callerIsAdmin) throw new Error("Permission refusée : réservé aux administrateurs");
+
+    await UpdateDocument(`/${this.COLLECTION_PATH}/${userId}`, {
+      role,
+      updatedAt: Timestamp.now(),
+    });
   }
 }

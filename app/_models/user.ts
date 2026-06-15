@@ -1,5 +1,6 @@
 import { StorageImage } from "../_interfaces/storage";
 import { Timestamp } from "firebase/firestore";
+import USER_ROLES from "@/app/_data/user_roles.json";
 
 // Champs publics — stockés dans /users/{userId}, modifiables directement par l'utilisateur
 export interface User {
@@ -10,6 +11,7 @@ export interface User {
   emailVerified?: boolean;
   photoURL?: string | null; // Photo par défaut (Google, etc.)
   profileImage?: StorageImage; // Image de profil personnalisée uploadée dans Storage
+  role?: keyof typeof USER_ROLES; // Rôle de l'utilisateur (défaut: "user")
   createdAt: Timestamp;
   updatedAt?: Timestamp;
   lastLoginAt?: Timestamp;

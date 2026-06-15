@@ -2,17 +2,100 @@ rules_version='2'
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      // This rule allows anyone with your database reference to view, edit,
-      // and delete all data in your database. It is useful for getting
-      // started, but it is configured to expire after 30 days because it
-      // leaves your app open to attackers. At that time, all client
-      // requests to your database will be denied.
-      //
-      // Make sure to write security rules for your app before that time, or
-      // else all client requests to your database will be denied until you
-      // update your rules.
-      allow read, write: if request.time < timestamp.date(2026, 7, 15);
+
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isCurrentUser(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+
+    // ── Users /users/{userId} ──────────────────────────────────────────────────
+    match /users/{userId} {
+      // Lecture : l'utilisateur lui-même ou un admin
+      allow read: if isCurrentUser(userId) || isAdmin();
+
+      // Création : uniquement par l'utilisateur lui-même (lors de l'inscription)
+      allow create: if isCurrentUser(userId)
+                    && request.resource.data.role == 'user'; // force le rôle user à la création
+
+      // Mise à jour : l'utilisateur peut modifier ses propres champs,
+      // mais seul un admin peut changer le champ `role`
+      allow update: if isCurrentUser(userId)
+                       && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']))
+                    || isAdmin();
+
+      // Suppression : admin uniquement
+      allow delete: if isAdmin();
+    }
+
+    // ── Products /products/{productId} ────────────────────────────────────────
+    match /products/{productId} {
+      // Lecture publique (même non connecté)
+      allow read: if true;
+
+      // Création, mise à jour, suppression : admin uniquement
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ── Orders /orders/{orderId} ──────────────────────────────────────────────
+    match /orders/{orderId} {
+      // Lecture : propriétaire de la commande ou admin
+      allow read: if isAuthenticated()
+                  && (resource.data.userId == request.auth.uid || isAdmin());
+
+      // Création : utilisateur connecté, pour lui-même uniquement
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.status == 'pending'
+                    && request.resource.data.paymentStatus == 'pending';
+
+      // Mise à jour : propriétaire (commande pending uniquement, champs restreints)
+      //               ou admin (tous les champs)
+      allow update: if isAdmin()
+                    || (isAuthenticated()
+                        && resource.data.userId == request.auth.uid
+                        && resource.data.status == 'pending'
+                        && !request.resource.data.diff(resource.data).affectedKeys()
+                            .hasAny(['userId', 'userEmail', 'items', 'subtotal',
+                                     'shippingCost', 'total', 'paymentStatus', 'createdAt']));
+
+      // Suppression : admin uniquement
+      allow delete: if isAdmin();
+    }
+
+    // ── Carts /carts/{userId} ─────────────────────────────────────────────────
+    match /carts/{userId} {
+      // Lecture, écriture, suppression : l'utilisateur lui-même ou un admin
+      allow read, write, delete: if isCurrentUser(userId) || isAdmin();
+    }
+
+    // ── Reviews /reviews/{reviewId} ───────────────────────────────────────────
+    match /reviews/{reviewId} {
+      // Lecture publique
+      allow read: if true;
+
+      // Création : utilisateur connecté, pour lui-même uniquement
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid;
+
+      // Mise à jour : admin uniquement
+      allow update: if isAdmin();
+
+      // Suppression : auteur ou admin
+      allow delete: if (isAuthenticated() && resource.data.userId == request.auth.uid)
+                    || isAdmin();
     }
   }
 }
+

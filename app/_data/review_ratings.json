@@ -1,0 +1,7 @@
+[
+  { "value": 1, "label": "Très mauvais", "stars": "★☆☆☆☆" },
+  { "value": 2, "label": "Mauvais",       "stars": "★★☆☆☆" },
+  { "value": 3, "label": "Correct",       "stars": "★★★☆☆" },
+  { "value": 4, "label": "Bon",           "stars": "★★★★☆" },
+  { "value": 5, "label": "Excellent",     "stars": "★★★★★" }
+]

@@ -1,22 +1,56 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
 
-    // This rule allows anyone with your Storage bucket reference to view, edit,
-    // and delete all data in your Storage bucket. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Storage bucket will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // all client requests to your Storage bucket will be denied until you Update
-    // your rules
-    match /{allPaths=**} {
-      allow read, write: if request.time < timestamp.date(2026, 7, 15);
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isCurrentUser(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated()
+          && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isImageFile() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function isFileSizeUnder(maxMB) {
+      return request.resource.size <= maxMB * 1024 * 1024;
+    }
+
+    // ── Profile images /users/{userId}/profile/** ──────────────────────────────
+    match /users/{userId}/profile/{fileName} {
+      // Lecture : l'utilisateur lui-même ou un admin
+      allow read: if isCurrentUser(userId) || isAdmin();
+
+      // Upload : l'utilisateur lui-même, image ≤ 5 Mo
+      allow write: if isCurrentUser(userId)
+                   && isImageFile()
+                   && isFileSizeUnder(5);
+
+      // Suppression : l'utilisateur lui-même ou un admin
+      allow delete: if isCurrentUser(userId) || isAdmin();
+    }
+
+    // ── Product images /products/{productId}/images/** ─────────────────────────
+    match /products/{productId}/images/{fileName} {
+      // Lecture publique
+      allow read: if true;
+
+      // Écriture (upload + remplacement) : admin uniquement, image ≤ 10 Mo
+      allow write: if isAdmin()
+                   && isImageFile()
+                   && isFileSizeUnder(10);
+
+      // Suppression : admin uniquement
+      allow delete: if isAdmin();
     }
   }
 }
