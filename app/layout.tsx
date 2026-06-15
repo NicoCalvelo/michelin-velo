@@ -2,10 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import Footer from "./_components/Footer";
 import { Lexend } from "next/font/google";
-import { Toasts } from "@/app/_components/Toasts";
+import { Toasts } from "@/app/_components/ui/Components/Toasts";
 import SignInModal from "./_components/auth/SignInModal";
-import AskForInputModal from "@/app/_components/AskForInputModal";
-import ConfirmationModal from "@/app/_components/ConfirmationModal";
+import ConfirmationModal from "@/app/_components/ui/Dialogs/ConfirmationModal";
 
 export const metadata: Metadata = {
   title: "Vélo Michelin Marketplace",
@@ -14,12 +13,6 @@ export const metadata: Metadata = {
     "vélo, vélo haut de gamme, vélo premium, vélo pro, accessoires vélo, pièces détachées, cyclisme, cycliste, marché du vélo, vente de vélos, achat de vélos, vélo d'occasion, vélo neuf",
 };
 
-const lexend = Lexend({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  display: "swap",
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,14 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={lexend.className}>
+      <body>
         {children}
         <Footer />
         <div id="toasts"></div>
         <div id="confirmation_dialogs"></div>
         <Toasts />
         <ConfirmationModal />
-        <AskForInputModal />
         <SignInModal />
       </body>
     </html>

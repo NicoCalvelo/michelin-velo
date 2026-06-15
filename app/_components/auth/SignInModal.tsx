@@ -2,11 +2,11 @@
 
 import { User } from "firebase/auth";
 import { Mail, Loader2 } from "lucide-react";
-import FormInput from "@/_base/Forms/FormInput";
+import FormInput from "@/app/_components/ui/Forms/FormInput";
 import React, { useEffect, useState } from "react";
 import GoogleSignInButton from "./GoogleSignInButton";
-import OutlinedButton from "@/_base/Buttons/OutlinedButton";
-import GenericModal, { ModalSize } from "@/app/_components/GenericModal";
+import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
+import GenericModal, { ModalSize } from "@/app/_components/ui/Dialogs/GenericModal";
 import { signInWithGoogle, sendSignInLink, auth } from "@/app/_services/AuthService";
 
 interface SignInModalInfo {
@@ -45,13 +45,13 @@ export default function SignInModal(): React.JSX.Element {
   useEffect(() => {
     // Vérifier que nous sommes côté client avant d'importer AuthHelper
     if (typeof window !== "undefined") {
-      import("@/_services/AuthService").then(({ auth }) =>
+      import("@/app/_services/AuthService").then(({ auth }) =>
         auth.onAuthStateChanged(async (user: User | null) => {
           if (user) {
             setConnectedUser(user);
             setOpen(false); // Close modal when user signs in
           }
-        })
+        }),
       );
     }
   }, []);
@@ -109,7 +109,11 @@ export default function SignInModal(): React.JSX.Element {
         <div className="p-5 sm:flex-1">
           <h2 className="text-lg font-semibold mb-2">{info.title}</h2>
           <p className="text-gray-600 text-sm">{info.comment}</p>
-          {error && <div className="bg-red-50 border border-red-200 text-red-600 mt-3 px-3 py-2 rounded-md text-xs sm:text-sm">{error}</div>}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 mt-3 px-3 py-2 rounded-md text-xs sm:text-sm">
+              {error}
+            </div>
+          )}
         </div>
 
         {emailSent ? (
@@ -128,7 +132,11 @@ export default function SignInModal(): React.JSX.Element {
         ) : (
           <div className="space-y-4 sm:w-4/5">
             {/* Google Sign In Button */}
-            <GoogleSignInButton onClick={handleGoogleSignIn} disabled={isLoadingGoogle || isLoadingEmail} isLoading={isLoadingGoogle} />
+            <GoogleSignInButton
+              onClick={handleGoogleSignIn}
+              disabled={isLoadingGoogle || isLoadingEmail}
+              isLoading={isLoadingGoogle}
+            />
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -157,7 +165,11 @@ export default function SignInModal(): React.JSX.Element {
                 className="w-full items-center justify-center"
                 hasIcon
               >
-                {isLoadingEmail ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <Mail className="w-4 h-4 shrink-0" />}
+                {isLoadingEmail ? (
+                  <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                ) : (
+                  <Mail className="w-4 h-4 shrink-0" />
+                )}
                 <span>Recevoir un lien de connexion</span>
               </OutlinedButton>
             </div>
@@ -173,7 +185,7 @@ let showModal: ((data: SignInModalInfo) => void) | null = null;
 export function showSignInModal(
   title: string = "Se connecter",
   comment: string = "Vous devez être connecté pour voir les commentaires.",
-  buttonText: string = "Se connecter"
+  buttonText: string = "Se connecter",
 ): void {
   // si l'utilisateur est connecté, on n'affiche pas le modal
   if (auth.currentUser !== null) {

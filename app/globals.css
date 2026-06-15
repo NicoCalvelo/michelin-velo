@@ -1,133 +1,57 @@
-/* Noto Sans pour l'UI - doit être en premier */
+/* Noto Sans — UI font */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400;1,700&display=swap");
 
-/* Import self-hosted Michelin fonts (stylesheet copié dans /public/fonts) */
+@import "tailwindcss";
+
+/* Michelin self-hosted fonts */
 @font-face {
   font-family: "Michelin";
-  src:
-    url("/fonts/Michelin-Light.woff2") format("woff2"),
-    url("/fonts/Michelin-Light.woff") format("woff"),
-    url("/fonts/Michelin-Light.ttf") format("truetype");
+  src: url("/fonts/Michelin-Light.woff2") format("woff2"),
+       url("/fonts/Michelin-Light.woff") format("woff"),
+       url("/fonts/Michelin-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Michelin";
-  src:
-    url("/fonts/Michelin-Regular.woff2") format("woff2"),
-    url("/fonts/Michelin-Regular.woff") format("woff"),
-    url("/fonts/Michelin-Regular.ttf") format("truetype");
+  src: url("/fonts/Michelin-Regular.woff2") format("woff2"),
+       url("/fonts/Michelin-Regular.woff") format("woff"),
+       url("/fonts/Michelin-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Michelin";
-  src:
-    url("/fonts/Michelin-SemiBold.woff2") format("woff2"),
-    url("/fonts/Michelin-SemiBold.woff") format("woff"),
-    url("/fonts/Michelin-SemiBold.ttf") format("truetype");
+  src: url("/fonts/Michelin-SemiBold.woff2") format("woff2"),
+       url("/fonts/Michelin-SemiBold.woff") format("woff"),
+       url("/fonts/Michelin-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Michelin";
-  src:
-    url("/fonts/Michelin-Bold.woff2") format("woff2"),
-    url("/fonts/Michelin-Bold.woff") format("woff"),
-    url("/fonts/Michelin-Bold.ttf") format("truetype");
+  src: url("/fonts/Michelin-Bold.woff2") format("woff2"),
+       url("/fonts/Michelin-Bold.woff") format("woff"),
+       url("/fonts/Michelin-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Michelin";
-  src:
-    url("/fonts/Michelin-Black.woff2") format("woff2"),
-    url("/fonts/Michelin-Black.woff") format("woff"),
-    url("/fonts/Michelin-Black.ttf") format("truetype");
+  src: url("/fonts/Michelin-Black.woff2") format("woff2"),
+       url("/fonts/Michelin-Black.woff") format("woff"),
+       url("/fonts/Michelin-Black.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
-@tailwind base;
-@tailwind components;
-@layer components {
-  /* Small components base styles (moved into components layer so utilities can override) */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    cursor: pointer;
-    font-family: var(--font-sans);
-  }
-  .btn-primary {
-    background-color: var(--color-primary);
-    color: white;
-  }
-  .btn-ghost {
-    background-color: transparent;
-    color: var(--color-fg);
-  }
-
-  /* Michelin-like CTA (b2b-cta) styles to match pro.michelin.fr */
-  .b2b-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 1rem 2rem;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    line-height: 1;
-    background: transparent;
-    border: 1px solid transparent;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  .b2b-cta:focus {
-    outline: none;
-  }
-  .b2b-cta--primary {
-    background: var(--color-primary);
-    color: #fff;
-    border-color: var(--color-primary);
-    transition:
-      background-color 150ms ease,
-      transform 120ms ease,
-      box-shadow 120ms ease;
-  }
-}
-.b2b-cta__label {
-  display: inline-block;
-  flex: 1 1 auto;
-  text-align: center;
-}
-
-/* Fallback form control class: ensures inputs/selects have expected padding
-     even if Tailwind utilities are not generated in the build (useful for dev) */
-.form-control {
-  padding: 0.75rem 1rem; /* matches px-6 py-3 approx */
-  font-size: 1rem;
-  line-height: 1.25;
-  border: 1px solid var(--gray-10, #e5e5e5);
-  background: var(--white);
-  color: var(--color-fg);
-  border-radius: var(--radius-sm);
-  box-sizing: border-box;
-}
-
-@tailwind utilities;
-
 :root {
-  /* Palette principale - Bleu Michelin */
+  /* ── Palette Michelin ── */
   --blue-ref: #27509b;
   --blue-dark-03: #3a61a6;
   --blue-dark-02: #6182bb;
@@ -136,7 +60,6 @@
   --blue-light-02: #c1d6ef;
   --blue-light-01: #d4e7fa;
 
-  /* Jaune Michelin (accent) - réservé aux projets commerciaux */
   --yellow-ref: #fce500;
   --yellow-dark-03: #fce817;
   --yellow-dark-02: #fded44;
@@ -145,7 +68,6 @@
   --yellow-light-02: #fef79e;
   --yellow-light-01: #fefccb;
 
-  /* Fonctionnel (blanc / noirs / gris) */
   --white: #ffffff;
   --gray-05: #f2f2f2;
   --gray-10: #e5e5e5;
@@ -161,177 +83,413 @@
   --gray-dark-50: #4d4d4d;
   --gray-dark-40: #666666;
 
-  /* Secondaires / tertiaires */
   --blue-darkest: #00205b;
   --midnight-blue: #000c34;
   --green-generous: #84bd00;
   --gris-responsable: #53565a;
 
-  /* Couleurs particulières (état) */
-  --valid: #2e7d32;
-  --valid-dark: #92c18f;
-  --valid-light: #e8f5e5;
-  --warning: #f9a825;
-  --warning-dark: #fcd286;
+  /* ── Tokens sémantiques ── */
+  --background: var(--white);
+  --background-dark: var(--gray-05);
+
+  --text: var(--blue-ref);
+  --text-light: var(--blue-dark-01);
+
+  --primary-light: var(--blue-light-01);
+  --primary: var(--blue-ref);
+  --primary-dark: var(--blue-darkest);
+  --primary-on: var(--white);
+
+  --secondary-light: var(--yellow-light-01);
+  --secondary: var(--yellow-ref);
+  --secondary-dark: #c9b800;
+  --secondary-on: var(--gray-dark-90);
+
+  --info-light: var(--blue-light-02);
+  --info: var(--blue-dark-02);
+  --info-dark: var(--blue-ref);
+  --info-on: var(--white);
+
+  --success-light: #e8f5e5;
+  --success: #84bd00;
+  --success-dark: #2e7d32;
+  --success-on: var(--gray-dark-90);
+
   --warning-light: #fdecc0;
-  --danger: #b71c1c;
-  --danger-dark: #dd8880;
-  --danger-light: #f4cec2;
+  --warning: #f9a825;
+  --warning-dark: #c67c00;
+  --warning-on: var(--gray-dark-90);
 
-  /* Mapping utilitaire (choisir la couleur primaire par défaut) */
-  --color-primary: var(--blue-ref);
-  --color-secondary: var(--yellow-ref);
-  --color-accent: var(--green-generous);
-  --color-bg: var(--white);
-  --color-fg: var(--gray-dark-90);
+  --error-light: #f4cec2;
+  --error: #b71c1c;
+  --error-dark: #7f0000;
+  --error-on: var(--white);
 
-  --font-sans:
-    "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial;
-  --font-display:
-    "Michelin", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  /* ── Typographie ── */
+  --font-sans: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --font-display: "Michelin", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
 
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New",
-    monospace;
-
+  /* ── Radii & Shadows ── */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --shadow-sm: 0 6px 18px rgba(16, 24, 40, 0.06);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Keep site background white per design requirement; only adjust foreground in dark-preference */
-    --color-fg: #e6eef8;
-  }
+@theme inline {
+  --color-background: var(--background);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  /* Stroke width */
+  --stroke-width-1_5: 1.5;
+
+  /* Custom colors */
+  --color-text-color: var(--text);
+  --color-text-light: var(--text-light);
+
+  --color-background-color: var(--background);
+  --color-background-dark: var(--background-dark);
+
+  --color-primary-light: var(--primary-light);
+  --color-primary-color: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-on: var(--primary-on);
+
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-color: var(--secondary);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-secondary-on: var(--secondary-on);
+
+  --color-info-light: var(--info-light);
+  --color-info-color: var(--info);
+  --color-info-dark: var(--info-dark);
+  --color-info-on: var(--info-on);
+
+  --color-success-light: var(--success-light);
+  --color-success-color: var(--success);
+  --color-success-dark: var(--success-dark);
+  --color-success-on: var(--success-on);
+
+  --color-warning-light: var(--warning-light);
+  --color-warning-color: var(--warning);
+  --color-warning-dark: var(--warning-dark);
+  --color-warning-on: var(--warning-on);
+
+  --color-error-light: var(--error-light);
+  --color-error-color: var(--error);
+  --color-error-dark: var(--error-dark);
+  --color-error-on: var(--error-on);
+
+  /* Box shadows */
+  --shadow-light: 0 0 8px 0 rgba(255, 255, 255, 0.1);
+  --shadow-light-lg: 0 0 14px 2px rgba(255, 255, 255, 0.1);
+  --shadow-light-xl: 0 0 20px 4px rgba(255, 255, 255, 0.1);
+  --shadow-inner-xl: inset 2px 4px 10px -4px rgba(0, 0, 0, 0.5);
+
+  /* Favorite counter animations */
+  --animate-bounce-up: bounce-up 0.3s ease-out;
+  --animate-bounce-down: bounce-down 0.3s ease-out;
 }
 
-/* Base reset + typography */
-* {
-  box-sizing: border-box;
+@keyframes bounce-up {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
 }
+
+@keyframes bounce-down {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(4px); }
+  100% { transform: translateY(0); }
+}
+
 html,
-body,
-#__next {
-  height: 100%;
-}
 body {
+  height: 100%;
+  background-color: var(--background) !important;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
   margin: 0;
-  background-color: var(--color-bg);
-  color: var(--blue-ref);
   font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
 }
 
-/* Force page background to white to match design (override external styles) */
-html,
-body,
-#__next {
-  background-color: var(--white) !important;
-}
-
-/* Typographic scale (mobile-first) — values taken from la charte */
-h1 {
+/* ── Typographic scale (Michelin brand) ── */
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 2em;
-  line-height: 3em;
+  margin: 0;
 }
-h2 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.875em;
-  line-height: 2.8125em;
-}
-h3 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.75em;
-  line-height: 2.625em;
-}
-h4 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.5em;
-  line-height: 2.25em;
-}
-h5 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.375em;
-  line-height: 2.0625em;
-}
-h6 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.25em;
-  line-height: 1.875em;
-}
-
-/* Body / paragraph sizes (Noto Sans) */
-body,
-p,
-li {
-  font-family: var(--font-sans);
-  font-size: 1em;
-  line-height: 1.5em;
-}
-.text-corps-l {
-  font-size: 1.125em;
-  line-height: 1.6875em;
-}
-.text-corps-m {
-  font-size: 1em;
-  line-height: 1.5em;
-}
-.text-corps-s {
-  font-size: 0.875em;
-  line-height: 1.5em;
-}
-.text-annotation {
-  font-size: 0.75em;
-  line-height: 1.125em;
-}
-.cta {
-  font-size: 0.875em;
-  line-height: 1.25em;
-  font-weight: 500;
-  text-decoration: underline;
-}
+h1 { font-size: 2rem;    line-height: 1.2; }
+h2 { font-size: 1.75rem; line-height: 1.25; }
+h3 { font-size: 1.5rem;  line-height: 1.3; }
+h4 { font-size: 1.25rem; line-height: 1.35; }
+h5 { font-size: 1.125rem; line-height: 1.4; }
+h6 { font-size: 1rem;    line-height: 1.5; }
 
 @media (min-width: 640px) {
-  h1 {
-    font-size: 2.25em;
-    line-height: 3.375em;
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.75rem; }
+}
+
+p, li { font-family: var(--font-sans); font-size: 1rem; line-height: 1.5; }
+
+.text-corps-l   { font-size: 1.125rem; line-height: 1.6875rem; }
+.text-corps-m   { font-size: 1rem;     line-height: 1.5rem; }
+.text-corps-s   { font-size: 0.875rem; line-height: 1.5rem; }
+.text-annotation { font-size: 0.75rem; line-height: 1.125rem; }
+
+
+a {
+  cursor: pointer;
+}
+
+select {
+  -moz-appearance: none; /* Firefox */
+  -webkit-appearance: none; /* Safari and Chrome */
+  appearance: none;
+}
+
+i {
+  aspect-ratio: 1 / 1;
+  display: inline-flex !important;
+  width: min-content;
+  height: min-content;
+  line-height: 1 !important;
+  vertical-align: middle;
+}
+
+label:has(~ div > input:invalid) {
+  color: var(--primary);
+}
+label:has(~ div > input:disabled) {
+  color: var(--text-light);
+}
+
+label:has(~ div > select:invalid) {
+  color: var(--primary);
+}
+label:has(~ div > select:disabled) {
+  color: var(--text-light);
+}
+
+label:has(~ textarea:invalid) {
+  color: var(--primary);
+}
+label:has(~ textarea:disabled) {
+  color: var(--text-light);
+}
+
+.search-bar:has(> input:focus) {
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@layer components {
+  /* Required by Prefabs folder ---- */
+  .btn {
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 75ms ease-in-out;
+    white-space: nowrap;
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.75rem 1.5rem;
   }
-  h2 {
-    font-size: 2em;
-    line-height: 3em;
+  .btn:focus {
+    outline: none;
+    box-shadow: none;
   }
-  h3 {
-    font-size: 1.75em;
-    line-height: 2.625em;
+  .btn:disabled {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .icon-btn {
+    transition: all 75ms ease-in-out;
+    border-radius: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .icon-btn:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .icon-btn:disabled {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .link {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 75ms;
+  }
+  .link:hover {
+    text-decoration: underline;
+    color: var(--primary-dark);
+  }
+
+  .card {
+    position: relative;
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .input {
+    background: transparent;
+    border-color: var(--text-color);
+    transition: all 75ms;
+  }
+  .input:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 1px var(--secondary-color);
+  }
+  .input:invalid {
+    border-color: var(--error-color);
+  }
+  .input::placeholder {
+    color: var(--text-light);
+    opacity: 0.5;
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  .file-input {
+    position: relative;
+  }
+  .file-input::file-selector-button {
+    background: var(--primary-color);
+    color: var(--primary-on);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    border: 0;
+    position: absolute;
+    cursor: pointer;
+    right: 2.5rem;
+    top: 0.125rem;
+    padding: 0.625rem 1rem;
+  }
+
+  /* Personalized */
+  .menu-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    cursor: pointer;
+  }
+  .menu-item:hover {
+    background: color-mix(in srgb, var(--primary-color) 5%, transparent);
+  }
+
+  /* Scrollbar styles */
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 10px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
+  /* ── Michelin CTA (style pro.michelin.fr) ── */
+  .b2b-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: var(--font-sans);
+  }
+  .b2b-cta:focus { outline: none; }
+  .b2b-cta--primary {
+    background: var(--primary);
+    color: var(--primary-on);
+    border-color: var(--primary);
+    transition: background-color 150ms ease, transform 120ms ease, box-shadow 120ms ease;
+  }
+  .b2b-cta--primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+  }
+  .b2b-cta--secondary {
+    background: var(--secondary);
+    color: var(--secondary-on);
+    border-color: var(--secondary);
+    transition: background-color 150ms ease, transform 120ms ease;
+  }
+  .b2b-cta--secondary:hover {
+    background: var(--secondary-dark);
+    border-color: var(--secondary-dark);
+  }
+  .b2b-cta__label {
+    display: inline-block;
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  /* ── Layout helpers ── */
+  .site-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 
-/* Utility helpers used by components */
-.site-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
