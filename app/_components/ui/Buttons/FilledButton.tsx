@@ -9,25 +9,44 @@ interface FilledButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
 }
 
-export default function FilledButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, children, ...props }: FilledButtonProps) {
-  if (!className.includes("bg-")) className = "bg-primary-color text-primary-on hover:bg-primary-color/90 " + className;
+export default function FilledButton({
+  className = "",
+  hasIcon = false,
+  type = "button",
+  onClick,
+  disabled = false,
+  children,
+  ...props
+}: FilledButtonProps) {
+  if (!className.includes("bg-"))
+    className = "bg-primary-color text-primary-on" + className;
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       type={type}
       {...props}
-      className={`btn transition-all hover:shadow-lg ${className} ` + (hasIcon ? " !pl-4 " : " ")}
+      className={
+        `btn transition-all ${className} ` + (hasIcon ? " !pl-4 " : " ")
+      }
     >
       {children}
     </button>
   );
 }
 
-export function SecondaryFilledButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, children, ...props }: FilledButtonProps) {
+export function SecondaryFilledButton({
+  className = "",
+  hasIcon = false,
+  type = "button",
+  onClick,
+  disabled = false,
+  children,
+  ...props
+}: FilledButtonProps) {
   return (
     <FilledButton
-      className={"bg-secondary-color text-secondary-on hover:bg-secondary-color/90 " + className}
+      className={"bg-secondary-color text-secondary-on" + className}
       hasIcon={hasIcon}
       type={type}
       onClick={onClick}
@@ -39,10 +58,20 @@ export function SecondaryFilledButton({ className = "", hasIcon = false, type = 
   );
 }
 
-export function DangerFilledButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, children, ...props }: FilledButtonProps) {
+export function DangerFilledButton({
+  className = "",
+  hasIcon = false,
+  type = "button",
+  onClick,
+  disabled = false,
+  children,
+  ...props
+}: FilledButtonProps) {
   return (
     <FilledButton
-      className={"bg-error-color text-error-on hover:bg-error-color/90 " + className}
+      className={
+        "bg-error-color text-error-on hover:bg-error-color/90 " + className
+      }
       hasIcon={hasIcon}
       type={type}
       onClick={onClick}
@@ -54,10 +83,21 @@ export function DangerFilledButton({ className = "", hasIcon = false, type = "bu
   );
 }
 
-export function WarningFilledButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, children, ...props }: FilledButtonProps) {
+export function WarningFilledButton({
+  className = "",
+  hasIcon = false,
+  type = "button",
+  onClick,
+  disabled = false,
+  children,
+  ...props
+}: FilledButtonProps) {
   return (
     <FilledButton
-      className={"bg-warning-color text-warning-on hover:bg-warning-color/90 " + className}
+      className={
+        "bg-warning-color text-warning-on hover:bg-warning-color/90 " +
+        className
+      }
       hasIcon={hasIcon}
       type={type}
       onClick={onClick}
@@ -69,10 +109,20 @@ export function WarningFilledButton({ className = "", hasIcon = false, type = "b
   );
 }
 
-export function InfoFilledButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, children, ...props }: FilledButtonProps) {
+export function InfoFilledButton({
+  className = "",
+  hasIcon = false,
+  type = "button",
+  onClick,
+  disabled = false,
+  children,
+  ...props
+}: FilledButtonProps) {
   return (
     <FilledButton
-      className={"bg-info-color text-info-on hover:bg-info-color/90 " + className}
+      className={
+        "bg-info-color text-info-on hover:bg-info-color/90 " + className
+      }
       hasIcon={hasIcon}
       type={type}
       onClick={onClick}
@@ -84,9 +134,24 @@ export function InfoFilledButton({ className = "", hasIcon = false, type = "butt
   );
 }
 
-export function SuccessFilledButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, children, ...props }: FilledButtonProps) {
+export function SuccessFilledButton({
+  className = "",
+  hasIcon = false,
+  type = "button",
+  onClick,
+  disabled = false,
+  children,
+  ...props
+}: FilledButtonProps) {
   return (
-    <FilledButton className={"bg-success-color text-success-on " + className} hasIcon={hasIcon} type={type} onClick={onClick} disabled={disabled} {...props}>
+    <FilledButton
+      className={"bg-success-color text-success-on " + className}
+      hasIcon={hasIcon}
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      {...props}
+    >
       {children}
     </FilledButton>
   );
