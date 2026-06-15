@@ -1,0 +1,587 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.app{width:100%;background:var(--color-background-tertiary);min-height:600px}
+.screen{display:none;padding:0}
+.screen.active{display:block}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#27509B;color:#fff}
+.nav-logo{font-size:15px;font-weight:500;letter-spacing:1px;color:#FCE500}
+.nav-links{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,0.85)}
+.nav-link{cursor:pointer;padding:4px 8px;border-radius:4px;transition:background 0.2s}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.15)}
+.nav-cta{background:#FCE500;color:#27509B;border:none;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer}
+
+.screen-tabs{display:flex;gap:6px;padding:10px 16px 0;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);flex-wrap:wrap}
+.tab{padding:7px 12px;font-size:12px;cursor:pointer;border-radius:6px 6px 0 0;border:0.5px solid transparent;color:var(--color-text-secondary);font-weight:400}
+.tab.active{background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);color:#27509B;font-weight:500}
+
+.hero{background:#27509B;color:#fff;padding:32px 24px;position:relative;overflow:hidden}
+.hero-tag{background:#FCE500;color:#27509B;font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:12px}
+.hero h1{font-size:22px;font-weight:500;line-height:1.3;margin-bottom:8px}
+.hero p{font-size:13px;opacity:0.85;line-height:1.6;margin-bottom:20px;max-width:380px}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn-primary{background:#FCE500;color:#27509B;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer}
+.btn-secondary{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.5);padding:10px 20px;border-radius:8px;font-size:13px;cursor:pointer}
+.hero-badge{position:absolute;right:20px;top:50%;transform:translateY(-50%);background:rgba(252,229,0,0.15);border:1.5px solid #FCE500;border-radius:12px;padding:12px 16px;text-align:center}
+.hero-badge .score{font-size:28px;font-weight:500;color:#FCE500}
+.hero-badge .label{font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px}
+
+.section{padding:20px}
+.section-title{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.section-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:16px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;padding:14px;cursor:pointer;transition:border-color 0.2s}
+.card:hover{border-color:#27509B}
+.card-img{width:100%;height:90px;background:linear-gradient(135deg,#e8eef7,#c5d4e8);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:28px}
+.card-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.card-type{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px}
+.card-price{font-size:14px;font-weight:500;color:#27509B}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin-left:6px}
+.badge-new{background:#E6F1FB;color:#185FA5}
+.badge-promo{background:#FAEEDA;color:#854F0B}
+
+.quiz-wrap{padding:20px}
+.quiz-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:16px;padding:24px}
+.quiz-progress{display:flex;gap:4px;margin-bottom:20px}
+.q-step{flex:1;height:3px;border-radius:2px;background:var(--color-border-tertiary)}
+.q-step.done{background:#27509B}
+.q-step.active{background:#FCE500}
+.quiz-q{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.quiz-hint{font-size:12px;color:var(--color-text-secondary);margin-bottom:20px}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.q-opt{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:14px 12px;cursor:pointer;text-align:center;transition:all 0.2s}
+.q-opt:hover{border-color:#27509B;background:#E6F1FB}
+.q-opt.selected{border-color:#27509B;background:#E6F1FB}
+.q-opt-icon{font-size:22px;margin-bottom:6px}
+.q-opt-label{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.q-opt-sub{font-size:11px;color:var(--color-text-secondary)}
+.quiz-nav{display:flex;justify-content:space-between;margin-top:20px;align-items:center}
+.q-counter{font-size:12px;color:var(--color-text-secondary)}
+
+.score-wrap{padding:20px}
+.score-card{background:#27509B;border-radius:16px;padding:24px;text-align:center;color:#fff;margin-bottom:16px}
+.score-ring{width:100px;height:100px;margin:0 auto 16px;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-number{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:26px;font-weight:500;color:#FCE500}
+.score-title{font-size:18px;font-weight:500;margin-bottom:4px}
+.score-sub{font-size:12px;opacity:0.8}
+.score-attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.attr-box{background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;text-align:center}
+.attr-val{font-size:16px;font-weight:500;color:#FCE500}
+.attr-name{font-size:10px;opacity:0.7;margin-top:2px}
+.reco-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px}
+
+.challenges-grid{display:grid;gap:10px;padding:20px}
+.challenge-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px}
+.challenge-card.active-ch{border-color:#27509B;border-width:1.5px}
+.ch-icon{width:44px;height:44px;border-radius:10px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px}
+.ch-icon.gold{background:#FAEEDA}
+.ch-icon.green{background:#EAF3DE}
+.ch-body{flex:1;min-width:0}
+.ch-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.ch-desc{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px}
+.ch-bar-wrap{background:var(--color-background-secondary);border-radius:10px;height:5px;width:100%}
+.ch-bar{height:5px;border-radius:10px;background:#27509B}
+.ch-footer{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.ch-reward{font-size:11px;color:#854F0B;font-weight:500}
+.ch-progress{font-size:10px;color:var(--color-text-secondary)}
+.ch-btn{background:#27509B;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:11px;font-weight:500;cursor:pointer;flex-shrink:0}
+.ch-btn.joined{background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+
+.product-wrap{padding:16px}
+.product-header{display:flex;gap:16px;margin-bottom:16px}
+.product-img{width:120px;height:120px;background:#E6F1FB;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:48px;flex-shrink:0}
+.product-info{flex:1}
+.product-brand{font-size:11px;color:#27509B;font-weight:500;margin-bottom:3px}
+.product-name{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.product-stars{color:#FCE500;font-size:13px;margin-bottom:6px}
+.product-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.product-price{font-size:20px;font-weight:500;color:#27509B}
+.product-old{font-size:13px;color:var(--color-text-secondary);text-decoration:line-through}
+.size-select{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.size-btn{padding:5px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:6px;font-size:11px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary)}
+.size-btn.sel{border-color:#27509B;background:#E6F1FB;color:#27509B}
+.add-cart{background:#27509B;color:#fff;border:none;padding:12px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;width:100%}
+.product-tabs{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px}
+.ptab{padding:8px 14px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-secondary)}
+.ptab.active{border-bottom-color:#27509B;color:#27509B;font-weight:500}
+.spec-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.spec-key{color:var(--color-text-secondary)}
+.spec-val{font-weight:500;color:var(--color-text-primary)}
+
+.login-wrap{padding:20px;max-width:360px;margin:0 auto}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo .m-logo{font-size:22px;font-weight:500;color:#27509B;letter-spacing:2px}
+.login-logo .m-sub{font-size:12px;color:var(--color-text-secondary)}
+.login-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:16px;padding:24px}
+.login-title{font-size:16px;font-weight:500;margin-bottom:4px;color:var(--color-text-primary)}
+.login-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:20px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:5px;display:block}
+.form-input{width:100%;padding:10px 12px;border:0.5px solid var(--color-border-secondary);border-radius:8px;font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary);outline:none}
+.form-input:focus{border-color:#27509B}
+.login-btn{width:100%;background:#27509B;color:#fff;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;margin-top:4px}
+.login-divider{text-align:center;font-size:11px;color:var(--color-text-secondary);margin:14px 0;position:relative}
+.login-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:0.5px;background:var(--color-border-tertiary)}
+.login-divider span{background:var(--color-background-primary);padding:0 10px;position:relative}
+.social-btn{width:100%;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);padding:10px;border-radius:8px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;color:var(--color-text-primary)}
+.login-footer{text-align:center;font-size:12px;color:var(--color-text-secondary);margin-top:16px}
+.login-link{color:#27509B;cursor:pointer;text-decoration:underline}
+
+.bo-wrap{padding:16px}
+.bo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.bo-title{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.metric{background:var(--color-background-secondary);border-radius:8px;padding:12px}
+.metric-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-val{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.metric-delta{font-size:10px;margin-top:2px}
+.delta-up{color:#3B6D11}
+.delta-down{color:#A32D2D}
+.bo-section{margin-bottom:20px}
+.bo-section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.bo-section-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.bo-table{width:100%;font-size:12px;border-collapse:collapse}
+.bo-table th{text-align:left;padding:6px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.bo-table td{padding:8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.status-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500}
+.s-active{background:#EAF3DE;color:#3B6D11}
+.s-pending{background:#FAEEDA;color:#854F0B}
+.s-draft{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.mini-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.mini-bar-label{font-size:11px;color:var(--color-text-secondary);width:60px;flex-shrink:0}
+.mini-bar-track{flex:1;height:6px;background:var(--color-border-tertiary);border-radius:3px}
+.mini-bar-fill{height:6px;border-radius:3px;background:#27509B}
+.mini-bar-val{font-size:11px;font-weight:500;color:var(--color-text-primary);width:36px;text-align:right}
+.bo-filter-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.filter-chip{padding:4px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:20px;font-size:11px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)}
+.filter-chip.active{background:#E6F1FB;border-color:#27509B;color:#27509B}
+</style>
+
+<h2 class="sr-only">Prototype UX interactif Michelin Bike — 6 écrans navigables</h2>
+
+<div class="app">
+<div class="nav-bar">
+  <span class="nav-logo"><i class="ti ti-bike" aria-hidden="true" style="margin-right:6px"></i>MICHELIN BIKE</span>
+  <div class="nav-links">
+    <span class="nav-link active" onclick="goScreen('home')">Accueil</span>
+    <span class="nav-link" onclick="goScreen('quiz')">Mon profil</span>
+    <span class="nav-link" onclick="goScreen('challenges')">Défis</span>
+    <span class="nav-link" onclick="goScreen('product')">Produit</span>
+  </div>
+  <button class="nav-cta" onclick="goScreen('login')"><i class="ti ti-user" aria-hidden="true"></i> Connexion</button>
+</div>
+
+<div class="screen-tabs">
+  <span class="tab active" onclick="setTab(this,'home')" id="tab-home">Accueil</span>
+  <span class="tab" onclick="setTab(this,'quiz')" id="tab-quiz">Quiz Rider</span>
+  <span class="tab" onclick="setTab(this,'score')" id="tab-score">Rider Score</span>
+  <span class="tab" onclick="setTab(this,'challenges')" id="tab-challenges">Défis</span>
+  <span class="tab" onclick="setTab(this,'product')" id="tab-product">Fiche produit</span>
+  <span class="tab" onclick="setTab(this,'login')" id="tab-login">Login</span>
+  <span class="tab" onclick="setTab(this,'backoffice')" id="tab-backoffice">Back office</span>
+</div>
+
+<div class="screen active" id="screen-home">
+  <div class="hero">
+    <span class="hero-tag"><i class="ti ti-sparkles" aria-hidden="true"></i> Nouveau · Michelin Power Cup 2</span>
+    <h1>Chaque kilomètre<br>mérite une meilleure roue.</h1>
+    <p>Découvrez la gamme Michelin pensée pour les cyclistes exigeants. Trouvez le pneu fait pour votre style, gagnez des défis, débloquez des offres exclusives.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="setTab(document.getElementById('tab-quiz'),'quiz')">Trouver mon pneu <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      <button class="btn-secondary" onclick="setTab(document.getElementById('tab-challenges'),'challenges')">Voir les défis</button>
+    </div>
+    <div class="hero-badge">
+      <div class="score">78</div>
+      <div class="label">Rider Score</div>
+      <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px">Faites le quiz →</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-title">Nos meilleures ventes</p>
+    <p class="section-sub">Sélection pour vous · mis à jour cette semaine</p>
+    <div class="cards-grid">
+      <div class="card" onclick="setTab(document.getElementById('tab-product'),'product')">
+        <div class="card-img"><i class="ti ti-bike" style="font-size:36px;color:#27509B" aria-hidden="true"></i></div>
+        <div class="card-name">Power Cup 2 TLR<span class="badge badge-new">Nouveau</span></div>
+        <div class="card-type">Route · Compétition</div>
+        <div class="card-price">89,90 €</div>
+      </div>
+      <div class="card" onclick="setTab(document.getElementById('tab-product'),'product')">
+        <div class="card-img"><i class="ti ti-mountain" style="font-size:36px;color:#0F6E56" aria-hidden="true"></i></div>
+        <div class="card-name">Wild Enduro MH<span class="badge badge-promo">-15%</span></div>
+        <div class="card-type">VTT · Enduro</div>
+        <div class="card-price">64,90 €</div>
+      </div>
+      <div class="card" onclick="setTab(document.getElementById('tab-product'),'product')">
+        <div class="card-img"><i class="ti ti-road" style="font-size:36px;color:#854F0B" aria-hidden="true"></i></div>
+        <div class="card-name">Power Gravel</div>
+        <div class="card-type">Gravel · Aventure</div>
+        <div class="card-price">74,90 €</div>
+      </div>
+      <div class="card" onclick="setTab(document.getElementById('tab-product'),'product')">
+        <div class="card-img"><i class="ti ti-building" style="font-size:36px;color:#3C3489" aria-hidden="true"></i></div>
+        <div class="card-name">City'J City</div>
+        <div class="card-type">Ville · Quotidien</div>
+        <div class="card-price">34,90 €</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0">
+    <div style="background:#E6F1FB;border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px;border:0.5px solid #B5D4F4">
+      <div style="font-size:28px"><i class="ti ti-trophy" style="color:#27509B" aria-hidden="true"></i></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500;color:#0C447C;margin-bottom:2px">Défi en cours · Sprint de juin</div>
+        <div style="font-size:11px;color:#185FA5;margin-bottom:8px">Parcourez 200 km ce mois et gagnez 20% sur votre prochaine commande</div>
+        <div style="background:#B5D4F4;height:5px;border-radius:5px"><div style="background:#27509B;height:5px;border-radius:5px;width:62%"></div></div>
+        <div style="font-size:10px;color:#185FA5;margin-top:3px">124 km / 200 km · 62% accompli</div>
+      </div>
+      <button class="nav-cta" style="flex-shrink:0" onclick="setTab(document.getElementById('tab-challenges'),'challenges')">Rejoindre</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-quiz">
+  <div class="quiz-wrap">
+    <div class="quiz-card">
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div id="quiz-content"></div>
+      <div class="quiz-nav">
+        <span class="q-counter" id="quiz-counter"></span>
+        <button class="btn-primary" style="padding:8px 20px;font-size:12px" id="quiz-next-btn" onclick="quizNext()">Suivant <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-score">
+  <div class="score-wrap">
+    <div class="score-card">
+      <div class="score-ring">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#FCE500" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="71" stroke-linecap="round"/>
+        </svg>
+        <div class="score-number">78</div>
+      </div>
+      <div class="score-title">Gravel Explorer</div>
+      <div class="score-sub">Votre profil cycliste · mis à jour aujourd'hui</div>
+      <div class="score-attrs">
+        <div class="attr-box"><div class="attr-val">4.2</div><div class="attr-name">Sorties/sem</div></div>
+        <div class="attr-box"><div class="attr-val">68 km</div><div class="attr-name">Distance moy.</div></div>
+        <div class="attr-box"><div class="attr-val">Expert</div><div class="attr-name">Niveau</div></div>
+      </div>
+    </div>
+    <div class="reco-title"><i class="ti ti-sparkles" style="color:#27509B" aria-hidden="true"></i> Pneus recommandés pour vous</div>
+    <div class="cards-grid">
+      <div class="card" onclick="setTab(document.getElementById('tab-product'),'product')">
+        <div class="card-img"><i class="ti ti-road" style="font-size:32px;color:#854F0B" aria-hidden="true"></i></div>
+        <div class="card-name">Power Gravel</div>
+        <div class="card-type">Correspondance · 97%</div>
+        <div class="card-price">74,90 €</div>
+      </div>
+      <div class="card" onclick="setTab(document.getElementById('tab-product'),'product')">
+        <div class="card-img"><i class="ti ti-mountain" style="font-size:32px;color:#0F6E56" aria-hidden="true"></i></div>
+        <div class="card-name">Wild AM2</div>
+        <div class="card-type">Correspondance · 84%</div>
+        <div class="card-price">59,90 €</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px;background:var(--color-background-secondary);border-radius:10px;border:0.5px solid var(--color-border-tertiary)">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px"><i class="ti ti-chart-bar" aria-hidden="true" style="color:#27509B"></i> Vos points forts</div>
+      <div class="mini-bar-row"><span class="mini-bar-label">Endurance</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:82%"></div></div><span class="mini-bar-val">82</span></div>
+      <div class="mini-bar-row"><span class="mini-bar-label">Technique</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:71%"></div></div><span class="mini-bar-val">71</span></div>
+      <div class="mini-bar-row"><span class="mini-bar-label">Vitesse</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:65%"></div></div><span class="mini-bar-val">65</span></div>
+      <div class="mini-bar-row"><span class="mini-bar-label">Aventure</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:90%"></div></div><span class="mini-bar-val">90</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-challenges">
+  <div style="padding:16px 20px 0">
+    <div style="font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">Défis du mois</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:12px">Participez, progressez et gagnez des offres exclusives Michelin</div>
+    <div class="bo-filter-row">
+      <span class="filter-chip active">Tous</span>
+      <span class="filter-chip">Distance</span>
+      <span class="filter-chip">Dénivelé</span>
+      <span class="filter-chip">Communauté</span>
+      <span class="filter-chip">Mes défis</span>
+    </div>
+  </div>
+  <div class="challenges-grid">
+    <div class="challenge-card active-ch">
+      <div class="ch-icon gold"><i class="ti ti-trophy" style="color:#854F0B" aria-hidden="true"></i></div>
+      <div class="ch-body">
+        <div class="ch-name">Sprint de juin</div>
+        <div class="ch-desc">Parcourez 200 km en juin sur route ou gravel</div>
+        <div class="ch-bar-wrap"><div class="ch-bar" style="width:62%"></div></div>
+        <div class="ch-footer">
+          <span class="ch-reward"><i class="ti ti-tag" aria-hidden="true"></i> -20% sur votre prochaine commande</span>
+          <span class="ch-progress">124/200 km</span>
+        </div>
+      </div>
+      <button class="ch-btn joined">Inscrit</button>
+    </div>
+    <div class="challenge-card">
+      <div class="ch-icon"><i class="ti ti-mountain" style="color:#185FA5" aria-hidden="true"></i></div>
+      <div class="ch-body">
+        <div class="ch-name">Grimpeur des Alpes</div>
+        <div class="ch-desc">Cumulez 3 000 m de dénivelé positif en 30 jours</div>
+        <div class="ch-bar-wrap"><div class="ch-bar" style="width:0%"></div></div>
+        <div class="ch-footer">
+          <span class="ch-reward"><i class="ti ti-gift" aria-hidden="true"></i> 1 pneu Power Cup offert</span>
+          <span class="ch-progress">0/3000 m</span>
+        </div>
+      </div>
+      <button class="ch-btn" onclick="this.textContent='Inscrit';this.classList.add('joined')">Rejoindre</button>
+    </div>
+    <div class="challenge-card">
+      <div class="ch-icon green"><i class="ti ti-users" style="color:#3B6D11" aria-hidden="true"></i></div>
+      <div class="ch-body">
+        <div class="ch-name">Challenge Ambassadeur</div>
+        <div class="ch-desc">Parrainez 3 amis qui achètent un pneu Michelin</div>
+        <div class="ch-bar-wrap"><div class="ch-bar" style="width:33%"></div></div>
+        <div class="ch-footer">
+          <span class="ch-reward"><i class="ti ti-discount" aria-hidden="true"></i> 30% + livraison gratuite</span>
+          <span class="ch-progress">1/3 parrainages</span>
+        </div>
+      </div>
+      <button class="ch-btn" onclick="this.textContent='Inscrit';this.classList.add('joined')">Rejoindre</button>
+    </div>
+    <div class="challenge-card">
+      <div class="ch-icon gold"><i class="ti ti-camera" style="color:#854F0B" aria-hidden="true"></i></div>
+      <div class="ch-body">
+        <div class="ch-name">Rider of the Month</div>
+        <div class="ch-desc">Partagez votre meilleure sortie sur Instagram #MichelinBike</div>
+        <div class="ch-bar-wrap"><div class="ch-bar" style="width:0%"></div></div>
+        <div class="ch-footer">
+          <span class="ch-reward"><i class="ti ti-star" aria-hidden="true"></i> Kit complet + mise en avant</span>
+          <span class="ch-progress">Vote communauté</span>
+        </div>
+      </div>
+      <button class="ch-btn" onclick="this.textContent='Inscrit';this.classList.add('joined')">Rejoindre</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-product">
+  <div class="product-wrap">
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:12px"><span onclick="setTab(document.getElementById('tab-home'),'home')" style="cursor:pointer;color:#27509B">Accueil</span> / <span style="cursor:pointer;color:#27509B" onclick="setTab(document.getElementById('tab-home'),'home')">Route</span> / Power Cup 2 TLR</div>
+    <div class="product-header">
+      <div class="product-img"><i class="ti ti-bike" aria-hidden="true"></i></div>
+      <div class="product-info">
+        <div class="product-brand">MICHELIN · Route</div>
+        <div class="product-name">Power Cup 2 TLR</div>
+        <div class="product-stars">★★★★★ <span style="color:var(--color-text-secondary);font-size:11px">(247 avis)</span></div>
+        <div class="product-price-row">
+          <span class="product-price">89,90 €</span>
+          <span class="product-old">99,90 €</span>
+          <span class="badge badge-promo">-10%</span>
+        </div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px">Taille</div>
+        <div class="size-select" id="size-select">
+          <div class="size-btn" onclick="selectSize(this)">700×25</div>
+          <div class="size-btn sel" onclick="selectSize(this)">700×28</div>
+          <div class="size-btn" onclick="selectSize(this)">700×30</div>
+          <div class="size-btn" onclick="selectSize(this)">700×32</div>
+        </div>
+        <button class="add-cart" onclick="this.textContent='✓ Ajouté au panier';this.style.background='#3B6D11';setTimeout(()=>{this.textContent=\'Ajouter au panier\';this.style.background=\'#27509B\'},2000)"><i class="ti ti-shopping-cart" aria-hidden="true"></i> Ajouter au panier</button>
+      </div>
+    </div>
+    <div style="background:#E6F1FB;border-radius:8px;padding:10px 12px;font-size:11px;color:#185FA5;margin-bottom:14px;display:flex;gap:8px;align-items:center">
+      <i class="ti ti-star" aria-hidden="true"></i>
+      <span>Recommandé pour les profils <strong>Route Performance</strong> · Score de correspondance 97%</span>
+    </div>
+    <div class="product-tabs">
+      <div class="ptab active" onclick="selectPtab(this,'spec')">Caractéristiques</div>
+      <div class="ptab" onclick="selectPtab(this,'desc')">Description</div>
+      <div class="ptab" onclick="selectPtab(this,'reviews')">Avis (247)</div>
+    </div>
+    <div id="ptab-spec">
+      <div class="spec-row"><span class="spec-key">Type</span><span class="spec-val">Tubeless Ready</span></div>
+      <div class="spec-row"><span class="spec-key">Carcasse</span><span class="spec-val">FullCarbon Pro4 · 120 TPI</span></div>
+      <div class="spec-row"><span class="spec-key">Protection</span><span class="spec-val">Pro-tek+ anticreveur</span></div>
+      <div class="spec-row"><span class="spec-key">Poids</span><span class="spec-val">215 g (700×28)</span></div>
+      <div class="spec-row"><span class="spec-key">Indice de vitesse</span><span class="spec-val">A (+ de 50 km/h)</span></div>
+      <div class="spec-row"><span class="spec-key">Saisons</span><span class="spec-val">3 saisons</span></div>
+    </div>
+    <div id="ptab-desc" style="display:none;font-size:12px;color:var(--color-text-secondary);line-height:1.7">Le Power Cup 2 TLR est le pneu de course par excellence. Conçu avec les équipes WorldTour, il offre le meilleur équilibre entre légèreté, adhérence et protection contre les crevaisons.</div>
+    <div id="ptab-reviews" style="display:none">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+        <div style="text-align:center"><div style="font-size:28px;font-weight:500;color:var(--color-text-primary)">4.8</div><div style="color:#FCE500;font-size:13px">★★★★★</div><div style="font-size:10px;color:var(--color-text-secondary)">247 avis</div></div>
+        <div style="flex:1">
+          <div class="mini-bar-row"><span class="mini-bar-label">5 ★</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:78%"></div></div><span class="mini-bar-val">78%</span></div>
+          <div class="mini-bar-row"><span class="mini-bar-label">4 ★</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:16%"></div></div><span class="mini-bar-val">16%</span></div>
+          <div class="mini-bar-row"><span class="mini-bar-label">3 ★</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:4%"></div></div><span class="mini-bar-val">4%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-login">
+  <div class="login-wrap">
+    <div class="login-logo">
+      <div class="m-logo"><i class="ti ti-bike" aria-hidden="true"></i> MICHELIN BIKE</div>
+      <div class="m-sub">L'expérience cycliste personnalisée</div>
+    </div>
+    <div class="login-card">
+      <div class="login-title">Connexion</div>
+      <div class="login-sub">Accédez à votre Rider Score et vos défis</div>
+      <div class="form-group">
+        <label class="form-label">Adresse email</label>
+        <input class="form-input" type="email" placeholder="vous@exemple.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mot de passe</label>
+        <input class="form-input" type="password" placeholder="••••••••">
+      </div>
+      <button class="login-btn" onclick="setTab(document.getElementById('tab-home'),'home')">Se connecter</button>
+      <div class="login-divider"><span>ou</span></div>
+      <button class="social-btn"><i class="ti ti-brand-strava" style="color:#FC4C02;font-size:16px" aria-hidden="true"></i> Continuer avec Strava</button>
+      <button class="social-btn"><i class="ti ti-brand-google" style="font-size:16px" aria-hidden="true"></i> Continuer avec Google</button>
+    </div>
+    <div class="login-footer">Pas encore de compte ? <span class="login-link" onclick="setTab(document.getElementById('tab-quiz'),'quiz')">Faire le quiz Rider →</span></div>
+  </div>
+</div>
+
+<div class="screen" id="screen-backoffice">
+  <div class="bo-wrap">
+    <div class="bo-header">
+      <div class="bo-title"><i class="ti ti-layout-dashboard" aria-hidden="true" style="color:#27509B"></i> Tableau de bord</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">Michelin Bike · Admin <span style="background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:10px;margin-left:6px">Live</span></div>
+    </div>
+    <div class="metrics-row">
+      <div class="metric">
+        <div class="metric-label">Riders actifs</div>
+        <div class="metric-val">12 847</div>
+        <div class="metric-delta delta-up">↑ +8,4% ce mois</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Ventes (€)</div>
+        <div class="metric-val">284 K</div>
+        <div class="metric-delta delta-up">↑ +12,1%</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Quiz complétés</div>
+        <div class="metric-val">8 432</div>
+        <div class="metric-delta delta-up">↑ +24%</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Taux conversion</div>
+        <div class="metric-val">18,3%</div>
+        <div class="metric-delta delta-up">↑ +2,1 pts</div>
+      </div>
+    </div>
+
+    <div class="bo-section">
+      <div class="bo-section-header">
+        <div class="bo-section-title"><i class="ti ti-chart-pie" aria-hidden="true" style="color:#27509B"></i> Répartition des profils riders</div>
+      </div>
+      <div class="mini-bar-row"><span class="mini-bar-label">Route</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:42%"></div></div><span class="mini-bar-val">42%</span></div>
+      <div class="mini-bar-row"><span class="mini-bar-label">VTT</span><div class="mini-bar-track"><div class="mini-bar-fill" style="background:#0F6E56;width:28%"></div></div><span class="mini-bar-val">28%</span></div>
+      <div class="mini-bar-row"><span class="mini-bar-label">Gravel</span><div class="mini-bar-track"><div class="mini-bar-fill" style="background:#854F0B;width:21%"></div></div><span class="mini-bar-val">21%</span></div>
+      <div class="mini-bar-row"><span class="mini-bar-label">Ville</span><div class="mini-bar-track"><div class="mini-bar-fill" style="background:#3C3489;width:9%"></div></div><span class="mini-bar-val">9%</span></div>
+    </div>
+
+    <div class="bo-section">
+      <div class="bo-section-header">
+        <div class="bo-section-title"><i class="ti ti-trophy" aria-hidden="true" style="color:#27509B"></i> Gestion des défis</div>
+        <button class="nav-cta" style="font-size:11px"><i class="ti ti-plus" aria-hidden="true"></i> Créer un défi</button>
+      </div>
+      <table class="bo-table">
+        <thead>
+          <tr><th>Défi</th><th>Participants</th><th>Récompense</th><th>Statut</th><th>Fin</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Sprint de juin</td><td>3 241</td><td>-20%</td><td><span class="status-badge s-active">Actif</span></td><td>30 juin</td></tr>
+          <tr><td>Grimpeur des Alpes</td><td>892</td><td>1 pneu offert</td><td><span class="status-badge s-active">Actif</span></td><td>30 juin</td></tr>
+          <tr><td>Challenge Ambassadeur</td><td>1 540</td><td>30% + livraison</td><td><span class="status-badge s-pending">En cours</span></td><td>15 juil.</td></tr>
+          <tr><td>Tour de France Fan</td><td>0</td><td>Kit complet</td><td><span class="status-badge s-draft">Brouillon</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bo-section">
+      <div class="bo-section-header">
+        <div class="bo-section-title"><i class="ti ti-package" aria-hidden="true" style="color:#27509B"></i> Top produits</div>
+      </div>
+      <table class="bo-table">
+        <thead>
+          <tr><th>Produit</th><th>Ventes</th><th>CA (€)</th><th>Stock</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Power Cup 2 TLR 700×28</td><td>1 842</td><td>165 580</td><td><span style="color:#3B6D11;font-weight:500">OK</span></td></tr>
+          <tr><td>Wild Enduro MH 29×2.4</td><td>987</td><td>63 974</td><td><span style="color:#3B6D11;font-weight:500">OK</span></td></tr>
+          <tr><td>Power Gravel 700×40</td><td>743</td><td>55 680</td><td><span style="color:#854F0B;font-weight:500">Faible</span></td></tr>
+          <tr><td>City'J 700×35</td><td>512</td><td>17 883</td><td><span style="color:#3B6D11;font-weight:500">OK</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const quizData=[
+  {q:"Quel type de cycliste êtes-vous ?",hint:"Choisissez votre pratique principale",opts:[{icon:"🚴",label:"Route",sub:"Vitesse & performance"},{icon:"🏔️",label:"VTT",sub:"Terrain & enduro"},{icon:"🌾",label:"Gravel",sub:"Aventure & nature"},{icon:"🏙️",label:"Ville",sub:"Quotidien & mobilité"}]},
+  {q:"À quelle fréquence sortez-vous ?",hint:"En moyenne sur l'année",opts:[{icon:"📅",label:"1-2×/semaine",sub:"Loisir régulier"},{icon:"🔥",label:"3-4×/semaine",sub:"Passionné"},{icon:"🏆",label:"5×+ /semaine",sub:"Compétiteur"},{icon:"🌤️",label:"Occasionnel",sub:"Sorties ponctuelles"}]},
+  {q:"Quelle est votre priorité ?",hint:"Ce qui compte le plus pour vous",opts:[{icon:"⚡",label:"Performance",sub:"Vitesse & watts"},{icon:"🛡️",label:"Sécurité",sub:"Accroche & fiabilité"},{icon:"🗺️",label:"Aventure",sub:"Explorer & découvrir"},{icon:"💰",label:"Rapport qualité/prix",sub:"Budget maîtrisé"}]},
+  {q:"Quel est votre terrain habituel ?",hint:"La majorité de vos sorties",opts:[{icon:"🛣️",label:"Route asphaltée",sub:"Routes & pistes cyclables"},{icon:"🌲",label:"Chemins & forêts",sub:"Single tracks"},{icon:"🌀",label:"Mixte",sub:"Tout type de terrain"},{icon:"🏘️",label:"Urbain",sub:"Ville & banlieue"}]},
+  {q:"Votre budget pour une paire de pneus ?",hint:"Investissement que vous êtes prêt à faire",opts:[{icon:"💵",label:"< 60 €",sub:"Entrée de gamme"},{icon:"💳",label:"60-100 €",sub:"Gamme intermédiaire"},{icon:"💎",label:"100-150 €",sub:"Premium"},{icon:"🚀",label:"150 € +",sub:"Compétition"}]}
+];
+let currentQ=0,answers=[];
+function renderQuiz(){
+  const d=quizData[currentQ];
+  let prog='';
+  for(let i=0;i<quizData.length;i++){
+    prog+=`<div class="q-step ${i<currentQ?'done':i===currentQ?'active':''}"></div>`;
+  }
+  document.getElementById('quiz-progress').innerHTML=prog;
+  document.getElementById('quiz-counter').textContent=`Question ${currentQ+1} sur ${quizData.length}`;
+  let opts='';
+  d.opts.forEach((o,i)=>{
+    opts+=`<div class="q-opt ${answers[currentQ]===i?'selected':''}" onclick="selectOpt(this,${i})"><div class="q-opt-icon">${o.icon}</div><div class="q-opt-label">${o.label}</div><div class="q-opt-sub">${o.sub}</div></div>`;
+  });
+  document.getElementById('quiz-content').innerHTML=`<div class="quiz-q">${d.q}</div><div class="quiz-hint">${d.hint}</div><div class="quiz-options">${opts}</div>`;
+  const nb=document.getElementById('quiz-next-btn');
+  if(currentQ===quizData.length-1){nb.innerHTML='Voir mon Rider Score <i class="ti ti-arrow-right" aria-hidden="true"></i>';}
+  else{nb.innerHTML='Suivant <i class="ti ti-arrow-right" aria-hidden="true"></i>';}
+}
+function selectOpt(el,i){
+  document.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[currentQ]=i;
+}
+function quizNext(){
+  if(answers[currentQ]===undefined){answers[currentQ]=0;}
+  if(currentQ<quizData.length-1){currentQ++;renderQuiz();}
+  else{setTab(document.getElementById('tab-score'),'score');}
+}
+function selectSize(el){
+  document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function selectPtab(el,id){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['spec','desc','reviews'].forEach(t=>{
+    const el2=document.getElementById('ptab-'+t);
+    if(el2)el2.style.display=t===id?'block':'none';
+  });
+}
+function goScreen(name){setTab(document.getElementById('tab-'+name),name);}
+function setTab(el,name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const sc=document.getElementById('screen-'+name);
+  if(sc)sc.classList.add('active');
+}
+renderQuiz();
+</script>
