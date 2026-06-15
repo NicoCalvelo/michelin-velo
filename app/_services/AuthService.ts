@@ -48,6 +48,7 @@ export function signInWithGoogle(): Promise<User> {
             UserRepository.createUser(result.user.uid, {
               displayName: result.user.displayName,
               email: result.user.email,
+              role: "user",
               photoURL: result.user.photoURL,
               emailVerified: result.user.emailVerified,
             });

@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@headlessui/tailwindcss": "^0.2.2",
+    "browser-image-compression": "^2.0.2",
     "firebase": "^12.10.0",
     "firebase-admin": "^10.3.0",
     "firebase-functions": "^4.9.0",

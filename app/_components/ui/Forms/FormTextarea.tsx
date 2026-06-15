@@ -100,7 +100,7 @@ export default function FormTextarea({
         props.onFocus(e);
       }
     },
-    [props]
+    [props],
   );
 
   const handleBlur = useCallback(
@@ -110,7 +110,7 @@ export default function FormTextarea({
         props.onBlur(e);
       }
     },
-    [props]
+    [props],
   );
 
   // Gestion des erreurs personnalisées
@@ -122,7 +122,7 @@ export default function FormTextarea({
         setCurrentError(errorMessage);
       }
     },
-    [errorMessage]
+    [errorMessage],
   );
 
   // Gestion du changement avec validation
@@ -174,7 +174,7 @@ export default function FormTextarea({
         }
       }
     },
-    [maxLength, autoResize, resizeElement, setValue]
+    [maxLength, autoResize, resizeElement, setValue],
   );
 
   // Classes CSS avec gestion d'erreur
@@ -199,7 +199,7 @@ export default function FormTextarea({
         <label
           className={
             `absolute pointer-events-none transition-colors text-sm truncate ${getTitleStyle(variant)} ` +
-            (isFocus ? "text-text-light font-medium" : "text-text-light") +
+            (isFocus ? " font-medium" : "") +
             (required ? " after:content-['*'] after:text-red-500 after:ml-1" : "")
           }
           htmlFor={textareaId}

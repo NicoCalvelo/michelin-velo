@@ -39,18 +39,6 @@ type DocumentWithMetadata = {
 
 /// FONCTIONS PRIVEES UTILITAIRES ===============================
 
-// check for duplicate API calls in development mode
-function checkDuplicateApiCall(apiCall: string) {
-  if (lastApiCall === apiCall) {
-    if (process.env.NEXT_PUBLIC_IS_PROD != "true" && typeof window !== "undefined") {
-      alert("Duplicate Firestore API call detected (see console for details)");
-      console.warn(`Duplicate Firestore API call detected: ${apiCall}`);
-    }
-    // TODO : si on est en production notifier via discord
-  }
-  lastApiCall = apiCall;
-}
-
 /**
  * Convertit un DocumentSnapshot en objet avec id, path et data
  */
@@ -123,7 +111,6 @@ export async function getDocumentsInCollection(
   start?: DocumentSnapshot,
   docsLimit: number = 10,
 ): Promise<DocumentWithMetadata[]> {
-  checkDuplicateApiCall(`getDocumentsInCollection(${collectionName}, ${start ? start.id : "null"}, ${docsLimit})`);
   return new Promise(async (resolve, reject) => {
     try {
       const additionalQueryParams: QueryConstraint[] = [];
@@ -140,7 +127,6 @@ export async function getDocumentsInCollection(
 }
 
 export async function getDocumentsByQuery(queryObj: Query<DocumentData>): Promise<DocumentWithMetadata[]> {
-  checkDuplicateApiCall(`getDocumentsByQuery(${queryObj})`);
   return new Promise(async (resolve, reject) => {
     try {
       const res = await getDocs(queryObj);
@@ -159,11 +145,6 @@ export async function getDocumentsWhere(
   docsLimit: number | null = null,
   startAfterDoc?: QueryDocumentSnapshot<DocumentData>,
 ): Promise<DocumentWithMetadata[]> {
-  checkDuplicateApiCall(
-    `getDocumentsWhere(${collectionName}, ${field}, ${operator}, ${value}, ${docsLimit}, ${
-      startAfterDoc ? startAfterDoc.id : "null"
-    })`,
-  );
   return new Promise(async (resolve, reject) => {
     try {
       const add: QueryConstraint[] = [];
@@ -186,7 +167,6 @@ export async function countDocumentsWhere(
   operator: WhereFilterOp,
   value: unknown,
 ): Promise<number> {
-  checkDuplicateApiCall(`countDocumentsWhere(${collectionName}, ${field}, ${operator}, ${value})`);
   return new Promise(async (resolve, reject) => {
     try {
       const q = query(collection(db, collectionName), where(field, operator, value));
@@ -202,7 +182,6 @@ export async function getDocument(
   path: string,
   ref?: DocumentReference<DocumentData>,
 ): Promise<DocumentWithMetadata | null> {
-  checkDuplicateApiCall(`getDocument(${path}, ${ref ? ref.id : "null"})`);
   const docSnapshot = await getDoc(ref ? ref : getDocumentReference(path));
   return convertDocumentSnapshot(docSnapshot);
 }
@@ -212,7 +191,6 @@ export async function createDocument(
   data: DocumentData,
   merge: boolean = true,
 ): Promise<DocumentReference<DocumentData>> {
-  checkDuplicateApiCall(`createDocument(${path}, data, ${merge})`);
   const cleanedData = removeUndefinedValues(data);
 
   if (path[0] === "/") {
@@ -233,14 +211,12 @@ export async function createDocument(
 }
 
 export async function UpdateDocument(path: string, data: Partial<DocumentData>): Promise<void> {
-  checkDuplicateApiCall(`UpdateDocument(${path}, data)`);
   const ref = getDocumentReference(path);
   const cleanedData = removeUndefinedValues(data);
   return updateDoc(ref, cleanedData);
 }
 
 export async function deleteDocument(path: string, ref?: DocumentReference<DocumentData>): Promise<void> {
-  checkDuplicateApiCall(`deleteDocument(${path}, ${ref ? ref.id : "null"})`);
   return deleteDoc(ref ? ref : getDocumentReference(path));
 }
 
@@ -248,7 +224,6 @@ export async function deleteDocument(path: string, ref?: DocumentReference<Docum
 
 export function getDocumentReference(path: string): DocumentReference<DocumentData> {
   if (typeof window === "undefined") return doc(db, path); // fallback for SSR
-  checkDuplicateApiCall(`getDocumentReference(${path})`);
   if (path[0] !== "/") path = "/" + path;
 
   // Try to get from localStorage cache
@@ -296,8 +271,6 @@ export function getDocumentReference(path: string): DocumentReference<DocumentDa
 
 export function getCollectionReference(collectionName: string): CollectionReference<DocumentData> {
   if (typeof window === "undefined") return collection(db, collectionName); // fallback for SSR
-
-  checkDuplicateApiCall(`getCollectionReference(${collectionName})`);
 
   const cacheKey = `firestore_col_ref_${collectionName}`;
   let cached = null;

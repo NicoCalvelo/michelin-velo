@@ -208,7 +208,7 @@ export default function FormInput({
         <label
           className={
             `absolute pointer-events-none transition-colors text-xs truncate ${getTitleStyle(variant)} ` +
-            (isFocus ? "text-text-light font-medium" : "text-text-light") +
+            (isFocus ? "font-medium" : "") +
             (required ? " after:content-['*'] after:text-red-500 after:ml-1" : "")
           }
           htmlFor={inputId}

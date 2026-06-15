@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState, useMemo } from "react";
-import { compressImage, isImageFile } from "@/_helpers/ImageHelper";
+import { compressImage, isImageFile } from "@/app/_helpers/ImageHelper";
 
 // Enum pour les variantes visuelles
 export enum DropZoneVariant {
