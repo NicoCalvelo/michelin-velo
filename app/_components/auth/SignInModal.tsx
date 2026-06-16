@@ -7,12 +7,19 @@ import React, { useEffect, useState } from "react";
 import GoogleSignInButton from "./GoogleSignInButton";
 import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
 import GenericModal, { ModalSize } from "@/app/_components/ui/Dialogs/GenericModal";
-import { signInWithGoogle, sendSignInLink, auth } from "@/app/_services/AuthService";
 
 interface SignInModalInfo {
   title: string;
   comment: string;
   buttonText: string;
+}
+
+function hasFirebaseConfig(): boolean {
+  return Boolean(
+    process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
+      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  );
 }
 
 export default function SignInModal(): React.JSX.Element {
@@ -44,7 +51,7 @@ export default function SignInModal(): React.JSX.Element {
 
   useEffect(() => {
     // Vérifier que nous sommes côté client avant d'importer AuthHelper
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && hasFirebaseConfig()) {
       import("@/app/_services/AuthService").then(({ auth }) =>
         auth.onAuthStateChanged(async (user: User | null) => {
           if (user) {
@@ -66,6 +73,7 @@ export default function SignInModal(): React.JSX.Element {
     setIsLoadingGoogle(true);
     setError("");
     try {
+      const { signInWithGoogle } = await import("@/app/_services/AuthService");
       await signInWithGoogle();
       // Modal will close automatically when auth state changes
     } catch (error) {
@@ -91,6 +99,7 @@ export default function SignInModal(): React.JSX.Element {
     setIsLoadingEmail(true);
     setError("");
     try {
+      const { sendSignInLink } = await import("@/app/_services/AuthService");
       await sendSignInLink(email);
       setEmailSent(true);
     } catch (error) {
@@ -187,11 +196,6 @@ export function showSignInModal(
   comment: string = "Vous devez être connecté pour voir les commentaires.",
   buttonText: string = "Se connecter",
 ): void {
-  // si l'utilisateur est connecté, on n'affiche pas le modal
-  if (auth.currentUser !== null) {
-    return;
-  }
-
   if (showModal) {
     showModal({
       title,
