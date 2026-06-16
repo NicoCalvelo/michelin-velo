@@ -18,7 +18,8 @@ export default function FilledButton({
   children,
   ...props
 }: FilledButtonProps) {
-  if (!className.includes("bg-")) className = "bg-primary-color text-primary-on " + className;
+  if (!className.includes("bg-"))
+    className = "bg-secondary-color text-secondary-on" + className;
   return (
     <button
       onClick={onClick}
@@ -43,7 +44,7 @@ export function SecondaryFilledButton({
 }: FilledButtonProps) {
   return (
     <FilledButton
-      className={"bg-secondary-color text-secondary-on" + className}
+      className={"bg-primary-color text-primary-on" + className}
       hasIcon={hasIcon}
       type={type}
       onClick={onClick}

@@ -6,45 +6,50 @@
 /* Michelin self-hosted fonts */
 @font-face {
   font-family: "Michelin";
-  src: url("/fonts/Michelin-Light.woff2") format("woff2"),
-       url("/fonts/Michelin-Light.woff") format("woff"),
-       url("/fonts/Michelin-Light.ttf") format("truetype");
+  src:
+    url("/fonts/Michelin-Light.woff2") format("woff2"),
+    url("/fonts/Michelin-Light.woff") format("woff"),
+    url("/fonts/Michelin-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Michelin";
-  src: url("/fonts/Michelin-Regular.woff2") format("woff2"),
-       url("/fonts/Michelin-Regular.woff") format("woff"),
-       url("/fonts/Michelin-Regular.ttf") format("truetype");
+  src:
+    url("/fonts/Michelin-Regular.woff2") format("woff2"),
+    url("/fonts/Michelin-Regular.woff") format("woff"),
+    url("/fonts/Michelin-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Michelin";
-  src: url("/fonts/Michelin-SemiBold.woff2") format("woff2"),
-       url("/fonts/Michelin-SemiBold.woff") format("woff"),
-       url("/fonts/Michelin-SemiBold.ttf") format("truetype");
+  src:
+    url("/fonts/Michelin-SemiBold.woff2") format("woff2"),
+    url("/fonts/Michelin-SemiBold.woff") format("woff"),
+    url("/fonts/Michelin-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Michelin";
-  src: url("/fonts/Michelin-Bold.woff2") format("woff2"),
-       url("/fonts/Michelin-Bold.woff") format("woff"),
-       url("/fonts/Michelin-Bold.ttf") format("truetype");
+  src:
+    url("/fonts/Michelin-Bold.woff2") format("woff2"),
+    url("/fonts/Michelin-Bold.woff") format("woff"),
+    url("/fonts/Michelin-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Michelin";
-  src: url("/fonts/Michelin-Black.woff2") format("woff2"),
-       url("/fonts/Michelin-Black.woff") format("woff"),
-       url("/fonts/Michelin-Black.ttf") format("truetype");
+  src:
+    url("/fonts/Michelin-Black.woff2") format("woff2"),
+    url("/fonts/Michelin-Black.woff") format("woff"),
+    url("/fonts/Michelin-Black.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -126,9 +131,14 @@
   --error-on: var(--white);
 
   /* ── Typographie ── */
-  --font-sans: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  --font-display: "Michelin", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  --font-sans:
+    "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial;
+  --font-display:
+    "Michelin", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New",
+    monospace;
 
   /* ── Radii & Shadows ── */
   --radius-sm: 6px;
@@ -194,15 +204,27 @@
 }
 
 @keyframes bounce-up {
-  0% { transform: translateY(0); }
-  40% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @keyframes bounce-down {
-  0% { transform: translateY(0); }
-  40% { transform: translateY(4px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 html,
@@ -223,31 +245,76 @@ body {
 }
 
 /* ── Typographic scale (Michelin brand) ── */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 700;
   margin: 0;
 }
-h1 { font-size: 2rem;    line-height: 1.2; }
-h2 { font-size: 1.75rem; line-height: 1.25; }
-h3 { font-size: 1.5rem;  line-height: 1.3; }
-h4 { font-size: 1.25rem; line-height: 1.35; }
-h5 { font-size: 1.125rem; line-height: 1.4; }
-h6 { font-size: 1rem;    line-height: 1.5; }
-
-@media (min-width: 640px) {
-  h1 { font-size: 2.25rem; }
-  h2 { font-size: 2rem; }
-  h3 { font-size: 1.75rem; }
+h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+h2 {
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+h5 {
+  font-size: 1.125rem;
+  line-height: 1.4;
+}
+h6 {
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
-p, li { font-family: var(--font-sans); font-size: 1rem; line-height: 1.5; }
+@media (min-width: 640px) {
+  h1 {
+    font-size: 2.25rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.75rem;
+  }
+}
 
-.text-corps-l   { font-size: 1.125rem; line-height: 1.6875rem; }
-.text-corps-m   { font-size: 1rem;     line-height: 1.5rem; }
-.text-corps-s   { font-size: 0.875rem; line-height: 1.5rem; }
-.text-annotation { font-size: 0.75rem; line-height: 1.125rem; }
+p,
+li {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+}
 
+.text-corps-l {
+  font-size: 1.125rem;
+  line-height: 1.6875rem;
+}
+.text-corps-m {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.text-corps-s {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+.text-annotation {
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+}
 
 a {
   cursor: pointer;
@@ -447,12 +514,17 @@ label:has(~ textarea:disabled) {
     text-decoration: none;
     font-family: var(--font-sans);
   }
-  .b2b-cta:focus { outline: none; }
+  .b2b-cta:focus {
+    outline: none;
+  }
   .b2b-cta--primary {
     background: var(--primary);
     color: var(--primary-on);
     border-color: var(--primary);
-    transition: background-color 150ms ease, transform 120ms ease, box-shadow 120ms ease;
+    transition:
+      background-color 150ms ease,
+      transform 120ms ease,
+      box-shadow 120ms ease;
   }
   .b2b-cta--primary:hover {
     background: var(--primary-dark);
@@ -462,7 +534,9 @@ label:has(~ textarea:disabled) {
     background: var(--secondary);
     color: var(--secondary-on);
     border-color: var(--secondary);
-    transition: background-color 150ms ease, transform 120ms ease;
+    transition:
+      background-color 150ms ease,
+      transform 120ms ease;
   }
   .b2b-cta--secondary:hover {
     background: var(--secondary-dark);
@@ -493,3 +567,16 @@ label:has(~ textarea:disabled) {
   }
 }
 
+/* Reusable typography class matching h1 rules in this project */
+.typo-h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+}
+@media (min-width: 640px) {
+  .typo-h1 {
+    font-size: 2.25rem;
+  }
+}
