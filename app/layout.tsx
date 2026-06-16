@@ -1,8 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Footer from "./_components/Footer";
-import NavBar from "./_components/NavBar";
-import { Lexend } from "next/font/google";
 import { Toasts } from "@/app/_components/ui/Components/Toasts";
 import SignInModal from "./_components/auth/SignInModal";
 import ConfirmationModal from "@/app/_components/ui/Dialogs/ConfirmationModal";
@@ -23,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body>
-        <NavBar />
         {children}
         <Footer />
         <div id="toasts"></div>
