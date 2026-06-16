@@ -4,13 +4,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, CheckCircle2, ShoppingBag, ShieldCheck, Truck } from "lucide-react";
+import { ArrowDownToLine, ArrowLeft, CheckCircle2, ShoppingBag, ShieldCheck, Truck } from "lucide-react";
+import ExperienceRenderer from "@/app/_components/experience/ExperienceRenderer";
+import { ExperienceDocument } from "@/app/_models/experience";
 import { Product } from "@/app/_models/product";
 import FilledButton from "@/app/_components/ui/Buttons/FilledButton";
 import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
 import Spinner from "@/app/_components/ui/Components/Spinner";
 import PublicProductCard from "../_components/PublicProductCard";
-import { MOCK_PRODUCTS } from "../_data/mockProducts";
 
 function formatPrice(value: number) {
   return (value / 100).toLocaleString("fr-FR", {
@@ -19,11 +20,9 @@ function formatPrice(value: number) {
   });
 }
 
-function formatDimension(product: Product) {
-  const { diameter, width, unit, isoSize } = product.dimension;
-  const readableUnit = unit === "inches" ? "\"" : " mm";
-  const size = unit === "inches" ? `${diameter} x ${width}${readableUnit}` : `${diameter} x ${width}${readableUnit}`;
-
+function formatDimension(diameter: number, width: number, unit: "mm" | "inches", isoSize?: string) {
+  const readableUnit = unit === "inches" ? '"' : " mm";
+  const size = `${diameter} x ${width}${readableUnit}`;
   return isoSize ? `${size} · ${isoSize}` : size;
 }
 
@@ -43,8 +42,8 @@ function getPractice(product: Product) {
 function hasFirebaseConfig() {
   return Boolean(
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
-      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   );
 }
 
@@ -54,43 +53,41 @@ export default function ProductDetailPage() {
   const id = params?.id as string | undefined;
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [experience, setExperience] = useState<ExperienceDocument | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [usesMockData, setUsesMockData] = useState(false);
 
   useEffect(() => {
     if (!id) return;
+    const productId = id;
 
     let mounted = true;
 
     async function loadProduct() {
-      if (!hasFirebaseConfig()) {
-        const mockProduct = MOCK_PRODUCTS.find((item) => item.id === id) ?? MOCK_PRODUCTS[0];
-        setProduct(mockProduct);
-        setUsesMockData(true);
-        setLoading(false);
-        return;
-      }
-
       try {
-        const { default: ProductRepository } = await import("@/app/_repositories/product_repository");
-        const data = await ProductRepository.getProductById(id!);
+        const [{ default: ProductRepository }, { default: ExperienceRepository }] = await Promise.all([
+          import("@/app/_repositories/product_repository"),
+          import("@/app/_repositories/experience_repository"),
+        ]);
+
+        const [data, publishedExperience, allActiveProducts] = await Promise.all([
+          ProductRepository.getProductById(productId),
+          ExperienceRepository.getPublishedExperienceByProductId(productId),
+          ProductRepository.getActiveProducts(12),
+        ]);
 
         if (!mounted) return;
 
         if (data) {
           setProduct(data);
+          setExperience(publishedExperience);
+          setRelatedProducts(allActiveProducts.filter((item) => item.id !== data.id).slice(0, 3));
           setUsesMockData(false);
           return;
         }
-
-        const mockProduct = MOCK_PRODUCTS.find((item) => item.id === id) ?? MOCK_PRODUCTS[0];
-        setProduct(mockProduct);
-        setUsesMockData(true);
       } catch {
         if (!mounted) return;
-        const mockProduct = MOCK_PRODUCTS.find((item) => item.id === id) ?? MOCK_PRODUCTS[0];
-        setProduct(mockProduct);
-        setUsesMockData(true);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -103,11 +100,46 @@ export default function ProductDetailPage() {
     };
   }, [id]);
 
-  const relatedProducts = useMemo(() => {
-    if (!product) return [];
+  const variants = useMemo(() => product?.variants ?? [], [product]);
 
-    return MOCK_PRODUCTS.filter((item) => item.id !== product.id).slice(0, 2);
-  }, [product]);
+  const priceRange = useMemo(() => {
+    if (!variants.length) return "Prix indisponible";
+    const prices = variants.map((variant) => variant.price);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    if (min === max) return formatPrice(min);
+    return `${formatPrice(min)} - ${formatPrice(max)}`;
+  }, [variants]);
+
+  const totalStock = useMemo(() => variants.reduce((sum, variant) => sum + variant.stock, 0), [variants]);
+
+  const availableSizes = useMemo(
+    () =>
+      variants.map((variant) => {
+        if (variant.title?.trim()) return variant.title;
+        return formatDimension(
+          variant.dimension.diameter,
+          variant.dimension.width,
+          variant.dimension.unit,
+          variant.dimension.isoSize,
+        );
+      }),
+    [variants],
+  );
+
+  const pressureRange = useMemo(() => {
+    if (!variants.length) return null;
+    const mins = variants.map((variant) => variant.barMinPressure).filter((value): value is number => value != null);
+    const maxs = variants.map((variant) => variant.barMaxPressure).filter((value): value is number => value != null);
+    if (!mins.length || !maxs.length) return null;
+    return `${Math.min(...mins)} à ${Math.max(...maxs)} bar`;
+  }, [variants]);
+
+  const minWeight = useMemo(() => {
+    const weights = variants.map((variant) => variant.weight).filter((value): value is number => value != null);
+    if (!weights.length) return null;
+    return Math.min(...weights);
+  }, [variants]);
 
   if (!id) {
     return (
@@ -141,19 +173,51 @@ export default function ProductDetailPage() {
   }
 
   const mainImage = product.images?.[0];
-  const compareFormatted = product.compareAtPrice ? formatPrice(product.compareAtPrice) : null;
+  const hasPublishedExperience = !!experience && experience.isPublished && experience.blocks.length > 0;
+  const detailsSectionId = "product-details-buy";
 
   return (
     <main className="min-h-screen bg-background-dark">
+      <button
+        type="button"
+        onClick={() =>
+          document.getElementById(detailsSectionId)?.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+        className="fixed inset-x-4 bottom-4 z-40 inline-flex items-center justify-center gap-2 rounded-full bg-primary-color px-4 py-3 text-sm font-semibold text-primary-on shadow-lg transition hover:bg-primary-dark md:left-auto md:right-6 md:inset-x-auto"
+      >
+        <ArrowDownToLine className="h-4 w-4" />
+        Détails techniques et achat
+      </button>
+
       <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <Link href="/product" className="inline-flex items-center gap-2 text-sm font-semibold text-primary-color hover:text-primary-dark">
+        <Link
+          href="/product"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-primary-color hover:text-primary-dark"
+        >
           <ArrowLeft className="h-4 w-4" />
           Retour aux produits
         </Link>
 
-        <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+        <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+          <div className="flex flex-col gap-4">
+            <p className="text-sm font-bold uppercase text-primary-color">
+              {product.brand} · {getPractice(product)}
+            </p>
+            <h1 className="text-3xl font-black leading-tight text-primary-dark sm:text-5xl">{product.name}</h1>
+            <p className="text-base leading-7 text-gray-600 sm:text-lg">{product.description}</p>
+            {hasPublishedExperience ? (
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-success-light px-3 py-1 text-xs font-bold text-success-dark">
+                Expérience immersive disponible
+              </span>
+            ) : (
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-600">
+                Expérience à venir
+              </span>
+            )}
+          </div>
+
           <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-            <div className="relative flex aspect-square items-center justify-center bg-[var(--primary-light)]">
+            <div className="relative flex aspect-square items-center justify-center bg-primary-light">
               {mainImage ? (
                 <Image
                   src={mainImage.url}
@@ -164,8 +228,14 @@ export default function ProductDetailPage() {
                   className="object-cover"
                 />
               ) : (
-                <div className="relative flex h-64 w-64 items-center justify-center rounded-full border-[38px] border-gray-900 bg-white shadow-inner">
-                  <div className="h-28 w-28 rounded-full border-[16px] border-primary-color bg-primary-light" />
+                <div
+                  className="relative flex h-64 w-64 items-center justify-center rounded-full border border-gray-900 bg-white shadow-inner"
+                  style={{ borderWidth: 38 }}
+                >
+                  <div
+                    className="h-28 w-28 rounded-full border border-primary-color bg-primary-light"
+                    style={{ borderWidth: 16 }}
+                  />
                 </div>
               )}
               {usesMockData && (
@@ -175,47 +245,67 @@ export default function ProductDetailPage() {
               )}
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="flex flex-col gap-6">
-            <div className="rounded-lg border border-gray-200 bg-white p-5 sm:p-6">
-              <p className="text-sm font-bold uppercase text-primary-color">{product.brand} · {getPractice(product)}</p>
-              <h1 className="mt-2 text-3xl font-black leading-tight text-primary-dark sm:text-4xl">{product.name}</h1>
-              <p className="mt-4 text-base leading-7 text-gray-600">{product.description}</p>
+      {hasPublishedExperience && (
+        <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
+          <div className="mb-4 flex items-center gap-2">
+            <Truck className="h-5 w-5 text-primary-color" />
+            <h2 className="text-xl font-black text-primary-dark">Expérience terrain</h2>
+          </div>
+          <ExperienceRenderer blocks={experience.blocks} />
+        </section>
+      )}
 
-              <div className="mt-6 flex flex-wrap items-end gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase text-gray-500">Prix conseillé</p>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-black text-primary-color">{formatPrice(product.price)}</span>
-                    {compareFormatted && <span className="text-base text-gray-500 line-through">{compareFormatted}</span>}
-                  </div>
-                </div>
-              </div>
+      <section id={detailsSectionId} className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-lg border border-gray-200 bg-white p-5 sm:p-6">
+            <p className="text-xs font-semibold uppercase text-gray-500">Prix conseillé</p>
+            <p className="mt-2 text-3xl font-black text-primary-color">{priceRange}</p>
+            <p className="mt-2 text-sm text-gray-600">Stock total : {totalStock > 0 ? totalStock : "Rupture"}</p>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <FilledButton className="bg-primary-color text-primary-on justify-center hover:bg-primary-dark" hasIcon>
-                  <ShoppingBag className="h-4 w-4" />
-                  Acheter en ligne
-                </FilledButton>
-                <OutlinedButton className="justify-center bg-white" hasIcon>
-                  <ShieldCheck className="h-4 w-4" />
-                  Comparer
-                </OutlinedButton>
-              </div>
+            <div className="mt-6 flex flex-col gap-3">
+              <FilledButton className="bg-primary-color text-primary-on justify-center hover:bg-primary-dark" hasIcon>
+                <ShoppingBag className="h-4 w-4" />
+                Acheter en ligne
+              </FilledButton>
+              <OutlinedButton className="justify-center bg-white" hasIcon>
+                <ShieldCheck className="h-4 w-4" />
+                Comparer
+              </OutlinedButton>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
               {[
-                ["Stock", product.stock > 0 ? "Disponible" : "Rupture"],
+                ["Disponibilité", totalStock > 0 ? "En stock" : "Rupture"],
                 ["Livraison", "E-retail"],
                 ["Usage", getPractice(product)],
+                ["Variantes", `${variants.length}`],
               ].map(([label, value]) => (
-                <div key={label} className="rounded-lg border border-gray-200 bg-white p-4">
+                <div key={label} className="rounded-lg border border-gray-200 bg-gray-50 p-3">
                   <p className="text-xs font-bold uppercase text-gray-500">{label}</p>
-                  <p className="mt-2 font-bold text-primary-dark">{value}</p>
+                  <p className="mt-1 font-semibold text-primary-dark">{value}</p>
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="rounded-lg border border-gray-200 bg-white p-5 sm:p-6">
+            <h2 className="text-xl font-black text-primary-dark">Détails techniques</h2>
+            <dl className="mt-4 divide-y divide-gray-100 text-sm">
+              {[
+                ["Dimensions", availableSizes.length ? availableSizes.join(" • ") : "À confirmer"],
+                ["Poids", minWeight != null ? `${minWeight} g` : "À confirmer"],
+                ["Pression", pressureRange ?? "À confirmer"],
+                ["Usage", getPractice(product)],
+              ].map(([label, value]) => (
+                <div key={label} className="grid grid-cols-[120px_1fr] gap-4 py-3">
+                  <dt className="font-semibold text-gray-500">{label}</dt>
+                  <dd className="font-semibold text-primary-dark">{value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </section>
@@ -234,20 +324,31 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="rounded-lg border border-gray-200 bg-white p-5 sm:p-6">
-          <h2 className="text-xl font-black text-primary-dark">Détails techniques</h2>
-          <dl className="mt-4 divide-y divide-gray-100 text-sm">
-            {[
-              ["Dimension", formatDimension(product)],
-              ["Poids", product.weight ? `${product.weight} g` : "À confirmer"],
-              ["Pression", product.minPressure && product.maxPressure ? `${product.minPressure} à ${product.maxPressure} bar` : "À confirmer"],
-              ["Technologie", product.technicalDetails ?? "À confirmer"],
-            ].map(([label, value]) => (
-              <div key={label} className="grid grid-cols-[120px_1fr] gap-4 py-3">
-                <dt className="font-semibold text-gray-500">{label}</dt>
-                <dd className="font-semibold text-primary-dark">{value}</dd>
-              </div>
-            ))}
-          </dl>
+          <h2 className="text-xl font-black text-primary-dark">Variantes disponibles</h2>
+          {variants.length === 0 ? (
+            <p className="mt-4 text-sm text-gray-600">Aucune variante renseignée.</p>
+          ) : (
+            <div className="mt-4 grid gap-3">
+              {variants.map((variant) => (
+                <div key={variant.title} className="rounded-lg border border-gray-200 p-4">
+                  <p className="font-semibold text-primary-dark">{variant.title}</p>
+                  <p className="mt-1 text-sm text-gray-600">
+                    {formatDimension(
+                      variant.dimension.diameter,
+                      variant.dimension.width,
+                      variant.dimension.unit,
+                      variant.dimension.isoSize,
+                    )}
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-600">
+                    <span>Prix: {formatPrice(variant.price)}</span>
+                    <span>Stock: {variant.stock}</span>
+                    {variant.weight != null && <span>Poids: {variant.weight} g</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -262,6 +363,8 @@ export default function ProductDetailPage() {
           ))}
         </div>
       </section>
+
+      <div className="h-20 md:h-0" />
     </main>
   );
 }

@@ -8,7 +8,6 @@ import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
 import SearchBar from "@/app/_components/ui/Components/SearchBar";
 import Spinner from "@/app/_components/ui/Components/Spinner";
 import PublicProductCard from "./_components/PublicProductCard";
-import { MOCK_PRODUCTS } from "./_data/mockProducts";
 import NavBar from "../_components/NavBar";
 
 const FILTERS = [
@@ -66,11 +65,10 @@ function hasFirebaseConfig() {
 }
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>();
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterValue>("all");
   const [loading, setLoading] = useState(true);
-  const [usesMockData, setUsesMockData] = useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -89,15 +87,10 @@ export default function ProductsPage() {
 
         if (data.length > 0) {
           setProducts(data);
-          setUsesMockData(false);
         } else {
-          setProducts(MOCK_PRODUCTS);
-          setUsesMockData(true);
         }
       } catch {
         if (!mounted) return;
-        setProducts(MOCK_PRODUCTS);
-        setUsesMockData(true);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -111,6 +104,7 @@ export default function ProductsPage() {
   }, []);
 
   const filteredProducts = useMemo(() => {
+    if (!products) return [];
     return products.filter((product) => {
       const matchesFilter = activeFilter === "all" || product.bikeType.includes(activeFilter);
       const searchable = [
@@ -131,7 +125,7 @@ export default function ProductsPage() {
     <>
       <NavBar />
       <main className="min-h-screen bg-background-dark">
-        <section className="bg-primary-dark text-primary-on">
+        <section className="bg-primary-dark text-primary-on pt-28">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-14">
             <div className="flex flex-col justify-center gap-6">
               <span className="inline-flex w-fit items-center gap-2 rounded-full bg-secondary-color px-4 py-2 text-sm font-bold text-secondary-on">
@@ -195,7 +189,7 @@ export default function ProductsPage() {
           <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-sm font-bold uppercase text-primary-color">
-                {usesMockData ? "Aperçu avec produit de démonstration" : "Catalogue"}
+                {products ? "Catalogue" : "Aperçu avec produit de démonstration"}
               </p>
               <h2 className="mt-1 text-2xl font-black text-primary-dark">Produits recommandés</h2>
             </div>

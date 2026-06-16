@@ -33,7 +33,16 @@ function getBikeTypeLabel(product: Product) {
 
 export default function PublicProductCard({ product }: PublicProductCardProps) {
   const mainImage = product.images?.[0];
-  const compareFormatted = product.compareAtPrice ? formatPrice(product.compareAtPrice) : null;
+  const prices = product.variants.map((variant) => variant.price);
+  const minPrice = prices.length ? Math.min(...prices) : null;
+  const maxPrice = prices.length ? Math.max(...prices) : null;
+
+  const priceLabel =
+    minPrice === null
+      ? "Prix indisponible"
+      : minPrice === maxPrice
+        ? (minPrice / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })
+        : `${(minPrice / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })} - ${(maxPrice! / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })}`;
 
   return (
     <OutlinedCard className="group flex h-full flex-col overflow-hidden bg-white p-0 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary-color hover:shadow-md">
@@ -70,7 +79,10 @@ export default function PublicProductCard({ product }: PublicProductCardProps) {
 
           <div className="mt-auto flex flex-wrap gap-2">
             {(product.tags ?? []).slice(0, 3).map((tag) => (
-              <span key={tag} className="rounded-full bg-background-dark px-2.5 py-1 text-xs font-semibold text-gray-600">
+              <span
+                key={tag}
+                className="rounded-full bg-background-dark px-2.5 py-1 text-xs font-semibold text-gray-600"
+              >
                 {tag}
               </span>
             ))}
@@ -80,8 +92,7 @@ export default function PublicProductCard({ product }: PublicProductCardProps) {
             <div>
               <p className="text-xs text-gray-500">À partir de</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black text-primary-color">{formatPrice(product.price)}</span>
-                {compareFormatted && <span className="text-sm text-gray-500 line-through">{compareFormatted}</span>}
+                <span className="text-xl font-black text-primary-color">{priceLabel}</span>
               </div>
             </div>
 
