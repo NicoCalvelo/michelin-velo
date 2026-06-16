@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import FilledButton from "./ui/Buttons/FilledButton";
+import FilledButton from "../Buttons/FilledButton";
 
 type Item = {
   id: string | number;
