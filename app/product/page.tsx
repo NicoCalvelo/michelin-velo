@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { Award, Bike, Filter, Leaf, RotateCcw, ShieldCheck, ShoppingBag } from "lucide-react";
 import { Product } from "@/app/_models/product";
 import FilledButton from "@/app/_components/ui/Buttons/FilledButton";
-import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
 import SearchBar from "@/app/_components/ui/Components/SearchBar";
 import Spinner from "@/app/_components/ui/Components/Spinner";
 import PublicProductCard from "./_components/PublicProductCard";
@@ -143,17 +143,20 @@ export default function ProductsPage() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-3">
-                <FilledButton className="bg-secondary-color text-secondary-on hover:bg-secondary-dark" hasIcon>
-                  <ShoppingBag className="h-4 w-4" />
-                  Voir les produits
-                </FilledButton>
-                <OutlinedButton className="border-white/60 bg-transparent text-white hover:bg-white/10" hasIcon>
-                  <Filter className="h-4 w-4" />
-                  Affiner ma pratique
-                </OutlinedButton>
-              </div>
+            <div className="flex flex-wrap gap-3">
+              <FilledButton className="bg-secondary-color text-secondary-on hover:bg-secondary-dark" hasIcon>
+                <ShoppingBag className="h-4 w-4" />
+                Voir les produits
+              </FilledButton>
+              <Link
+                href="/quiz"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/60 bg-transparent px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
+              >
+                <Filter className="h-4 w-4" />
+                Affiner ma pratique
+              </Link>
             </div>
+          </div>
 
             <div className="grid content-center gap-3 rounded-lg border border-white/15 bg-white/10 p-4 shadow-light">
               <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">

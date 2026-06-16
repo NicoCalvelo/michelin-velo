@@ -12,21 +12,29 @@ import FilledButton from "@/app/_components/ui/Buttons/FilledButton";
 import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
 import Spinner from "@/app/_components/ui/Components/Spinner";
 import PublicProductCard from "../_components/PublicProductCard";
+import { MOCK_PRODUCTS } from "../_data/mockProducts";
 
-function formatPrice(value: number) {
+function formatPrice(value?: number) {
+  if (typeof value !== "number") return "Prix à confirmer";
+
   return (value / 100).toLocaleString("fr-FR", {
     style: "currency",
     currency: "EUR",
   });
 }
 
-function formatDimension(diameter: number, width: number, unit: "mm" | "inches", isoSize?: string) {
-  const readableUnit = unit === "inches" ? '"' : " mm";
-  const size = `${diameter} x ${width}${readableUnit}`;
+function formatDimension(product: Product) {
+  if (!product.dimension) return "À confirmer";
+
+  const { diameter, width, unit, isoSize } = product.dimension;
+  const readableUnit = unit === "inches" ? "\"" : " mm";
+  const size = unit === "inches" ? `${diameter} x ${width}${readableUnit}` : `${diameter} x ${width}${readableUnit}`;
+
   return isoSize ? `${size} · ${isoSize}` : size;
 }
 
 function getPractice(product: Product) {
+  const bikeTypes = product.bikeType ?? [];
   const labels: Record<string, string> = {
     road: "Route",
     mountain: "VTT",
@@ -36,7 +44,9 @@ function getPractice(product: Product) {
     electric: "E-bike",
   };
 
-  return product.bikeType.map((type) => labels[type] ?? type).join(" / ");
+  if (bikeTypes.length === 0) return "Usage à confirmer";
+
+  return bikeTypes.map((type) => labels[type] ?? type).join(" / ");
 }
 
 function hasFirebaseConfig() {
@@ -173,8 +183,7 @@ export default function ProductDetailPage() {
   }
 
   const mainImage = product.images?.[0];
-  const hasPublishedExperience = !!experience && experience.isPublished && experience.blocks.length > 0;
-  const detailsSectionId = "product-details-buy";
+  const compareFormatted = typeof product.compareAtPrice === "number" ? formatPrice(product.compareAtPrice) : null;
 
   return (
     <main className="min-h-screen bg-background-dark">
@@ -223,6 +232,7 @@ export default function ProductDetailPage() {
                   src={mainImage.url}
                   alt={mainImage.altText ?? product.name}
                   fill
+                  priority
                   unoptimized
                   sizes="(min-width: 1024px) 50vw, 100vw"
                   className="object-cover"
@@ -278,7 +288,7 @@ export default function ProductDetailPage() {
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               {[
-                ["Disponibilité", totalStock > 0 ? "En stock" : "Rupture"],
+                ["Stock", typeof product.stock === "number" ? (product.stock > 0 ? "Disponible" : "Rupture") : "À confirmer"],
                 ["Livraison", "E-retail"],
                 ["Usage", getPractice(product)],
                 ["Variantes", `${variants.length}`],

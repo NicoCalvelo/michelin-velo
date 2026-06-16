@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { BikeType, Product } from "@/app/_models/product";
 import { StorageImage } from "@/app/_interfaces/storage";
 import PRODUCT_STATUS from "@/app/_data/product_status.json";
@@ -93,6 +93,9 @@ function toFormData(product?: Product): ProductFormData {
       tags: "",
     };
   }
+
+  const dimension = product.dimension;
+
   return {
     name: product.name,
     slug: product.slug,
@@ -145,13 +148,6 @@ export default function ProductForm({
   const [existingImages, setExistingImages] = useState<StorageImage[]>(initialData?.images ?? []);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [deletedPaths, setDeletedPaths] = useState<string[]>([]);
-
-  // Auto-generate slug from name unless user edited it manually
-  useEffect(() => {
-    if (!slugEdited) {
-      setForm((f) => ({ ...f, slug: slugify(f.name) }));
-    }
-  }, [form.name, slugEdited]);
 
   const set = (key: Exclude<keyof ProductFormData, "variants" | "bikeType">) => (value: string | number) =>
     setForm((f) => ({ ...f, [key]: value.toString() }));

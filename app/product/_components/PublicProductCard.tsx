@@ -11,7 +11,9 @@ interface PublicProductCardProps {
   product: Product;
 }
 
-function formatPrice(value: number) {
+function formatPrice(value?: number) {
+  if (typeof value !== "number") return "Prix à confirmer";
+
   return (value / 100).toLocaleString("fr-FR", {
     style: "currency",
     currency: "EUR",
