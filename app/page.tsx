@@ -250,6 +250,115 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <section className="site-container pb-28">
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+          {/* LEFT - TEXT / CTA */}
+          <div className="max-w-xl">
+            <span className="mb-4 inline-flex rounded-full bg-[var(--yellow-ref)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
+              Communauté Michelin Bicycle
+            </span>
+
+            <h2 className="typo-h1 mb-6">Suivez nos aventures sur Instagram</h2>
+
+            <p className="mb-8 mt-4">
+              Courses, tests terrain, coulisses des équipes professionnelles et
+              concours exclusifs : rejoignez la communauté Michelin Bicycle et
+              vivez le cyclisme autrement.
+            </p>
+
+            {/* HIGHLIGHTS */}
+            <div className="mb-10 space-y-4">
+              <div className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-[var(--yellow-ref)]" />
+                <p className="text-sm">
+                  Tests produits en conditions réelles avec des équipes pro
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-[var(--yellow-ref)]" />
+                <p className="text-sm">
+                  Concours pour gagner pneus, équipements et vélos
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-[var(--yellow-ref)]" />
+                <p className="text-sm">
+                  Conseils de riders professionnels et ambassadeurs
+                </p>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <a
+              href="https://instagram.com/michelinbicycle"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 rounded-lg bg-[var(--yellow-ref)] px-6 py-3 text-[var(--midnight-blue)] transition hover:opacity-90"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4c0 3.2-2.6 5.8-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8C2 4.6 4.6 2 7.8 2zm8.4 2H7.8C5.7 4 4 5.7 4 7.8v8.4C4 18.3 5.7 20 7.8 20h8.4c2.1 0 3.8-1.7 3.8-3.8V7.8C20 5.7 18.3 4 16.2 4zM12 7a5 5 0 100 10 5 5 0 000-10zm6.4-.9a1.1 1.1 0 110 2.2 1.1 1.1 0 010-2.2z" />
+              </svg>
+
+              <span className="font-semibold">@michelinbicycle</span>
+            </a>
+          </div>
+
+          {/* RIGHT - PHONE MOCK */}
+          <div className="relative flex justify-center">
+            {/* glow background */}
+            <div className="absolute h-72 w-72 rounded-full bg-[var(--yellow-ref)] opacity-20 blur-3xl" />
+
+            {/* phone */}
+            <div className="relative w-[280px] rounded-[2.5rem] border border-black/10 bg-white p-3 shadow-xl">
+              {/* notch */}
+              <div className="mx-auto mb-3 h-2 w-24 rounded-full bg-black/10" />
+
+              {/* screen */}
+              <div className="space-y-3 rounded-[2rem] bg-[var(--midnight-blue)] p-4 text-white">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold opacity-70">
+                    Michelin Bicycle
+                  </span>
+                  <span className="text-xs text-[var(--yellow-ref)]">LIVE</span>
+                </div>
+
+                {/* fake stories */}
+                <div className="space-y-3">
+                  <div className="h-24 rounded-xl bg-white/10 p-3">
+                    <p className="text-xs font-semibold">
+                      Test terrain — Paris Roubaix
+                    </p>
+                    <p className="mt-1 text-xs opacity-70">
+                      Pneus testés en conditions extrêmes
+                    </p>
+                  </div>
+
+                  <div className="h-24 rounded-xl bg-white/10 p-3">
+                    <p className="text-xs font-semibold">Concours du mois</p>
+                    <p className="mt-1 text-xs opacity-70">
+                      Gagnez un pack pneus gravel
+                    </p>
+                  </div>
+
+                  <div className="h-24 rounded-xl bg-white/10 p-3">
+                    <p className="text-xs font-semibold">Ambassadeurs</p>
+                    <p className="mt-1 text-xs opacity-70">
+                      Romain Bardet en entraînement
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
