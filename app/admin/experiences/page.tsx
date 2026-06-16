@@ -7,7 +7,6 @@ import SearchBar from "@/app/_components/ui/Components/SearchBar";
 import Spinner from "@/app/_components/ui/Components/Spinner";
 import FilledButton from "@/app/_components/ui/Buttons/FilledButton";
 import { showDangerConfirmationModal } from "@/app/_components/ui/Dialogs/ConfirmationModal";
-import ExperienceRepository from "@/app/_repositories/experience_repository";
 import { ExperienceDocument } from "@/app/_models/experience";
 import ExperienceCard from "./_components/ExperienceCard";
 
@@ -21,6 +20,7 @@ export default function AdminExperiencesPage() {
     try {
       setLoading(true);
       setError(null);
+      const { default: ExperienceRepository } = await import("@/app/_repositories/experience_repository");
       const data = await ExperienceRepository.getAllExperiences(300);
       const sorted = [...data].sort((a, b) => b.updatedAt.seconds - a.updatedAt.seconds);
       setExperiences(sorted);
@@ -50,6 +50,7 @@ export default function AdminExperiencesPage() {
 
   const handleDelete = async (experience: ExperienceDocument) => {
     try {
+      const { default: ExperienceRepository } = await import("@/app/_repositories/experience_repository");
       await showDangerConfirmationModal(
         `Supprimer l'expérience de ${experience.tireModel} ?`,
         "Cette action est irréversible. Les images associées seront supprimées.",
