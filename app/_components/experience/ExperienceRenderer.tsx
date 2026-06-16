@@ -15,6 +15,47 @@ interface ExperienceRendererProps {
   className?: string;
 }
 
+function getEmbeddableVideoUrl(videoUrl: string): string {
+  const trimmed = videoUrl.trim();
+  if (!trimmed) return "";
+
+  // Accept a raw YouTube video id for convenience in admin inputs.
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+    return `https://www.youtube.com/embed/${trimmed}`;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    const host = url.hostname.toLowerCase();
+
+    const isYouTubeHost =
+      host === "youtu.be" ||
+      host === "www.youtu.be" ||
+      host === "youtube.com" ||
+      host === "www.youtube.com" ||
+      host === "m.youtube.com";
+
+    if (!isYouTubeHost) return trimmed;
+
+    let videoId = "";
+
+    if (host.includes("youtu.be")) {
+      videoId = url.pathname.split("/").filter(Boolean)[0] ?? "";
+    } else if (url.pathname.startsWith("/watch")) {
+      videoId = url.searchParams.get("v") ?? "";
+    } else if (url.pathname.startsWith("/embed/")) {
+      videoId = url.pathname.split("/")[2] ?? "";
+    } else if (url.pathname.startsWith("/shorts/") || url.pathname.startsWith("/live/")) {
+      videoId = url.pathname.split("/")[2] ?? "";
+    }
+
+    if (!videoId) return trimmed;
+    return `https://www.youtube.com/embed/${videoId}`;
+  } catch {
+    return trimmed;
+  }
+}
+
 function blockWrapper(editable: boolean): string {
   return editable
     ? "rounded-xl border-2 border-dashed border-primary-color/40 bg-white p-5"
@@ -22,6 +63,8 @@ function blockWrapper(editable: boolean): string {
 }
 
 function HeroVideoView({ block, editable }: { block: HeroVideoBlock; editable: boolean }) {
+  const embedUrl = getEmbeddableVideoUrl(block.videoUrl);
+
   return (
     <section className={blockWrapper(editable)}>
       <div className="space-y-2">
@@ -29,9 +72,9 @@ function HeroVideoView({ block, editable }: { block: HeroVideoBlock; editable: b
         {block.subheadline && <p className="text-gray-600">{block.subheadline}</p>}
       </div>
       <div className="mt-4 aspect-video w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-        {block.videoUrl ? (
+        {embedUrl ? (
           <iframe
-            src={block.videoUrl}
+            src={embedUrl}
             title={block.headline}
             className="h-full w-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
