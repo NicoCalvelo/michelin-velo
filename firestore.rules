@@ -48,6 +48,21 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    // ── Experiences /experiences/{productId} ────────────────────────────────
+    match /experiences/{productId} {
+      // Lecture publique uniquement si publié, admin autorisé sur tout
+      allow read: if resource.data.isPublished == true || isAdmin();
+
+      // Ecriture admin uniquement, avec cohérence de l'identifiant produit
+      allow create: if isAdmin()
+                    && request.resource.data.productId == productId;
+
+      allow update: if isAdmin()
+                    && request.resource.data.productId == productId;
+
+      allow delete: if isAdmin();
+    }
+
     // ── Orders /orders/{orderId} ──────────────────────────────────────────────
     match /orders/{orderId} {
       // Lecture : propriétaire de la commande ou admin

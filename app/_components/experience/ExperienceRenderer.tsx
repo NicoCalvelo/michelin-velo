@@ -1,0 +1,191 @@
+import React from "react";
+import {
+  BlockType,
+  ChapterContentBlock,
+  CircuitOverviewBlock,
+  ExperienceBlock,
+  ExpertQuoteBlock,
+  HeroVideoBlock,
+  TelemetryDashboardBlock,
+} from "@/app/_models/experience";
+
+interface ExperienceRendererProps {
+  blocks: ExperienceBlock[];
+  editable?: boolean;
+  className?: string;
+}
+
+function blockWrapper(editable: boolean): string {
+  return editable
+    ? "rounded-xl border-2 border-dashed border-primary-color/40 bg-white p-5"
+    : "rounded-xl border border-gray-200 bg-white p-5";
+}
+
+function HeroVideoView({ block, editable }: { block: HeroVideoBlock; editable: boolean }) {
+  return (
+    <section className={blockWrapper(editable)}>
+      <div className="space-y-2">
+        <h3 className="text-xl font-bold text-gray-900">{block.headline}</h3>
+        {block.subheadline && <p className="text-gray-600">{block.subheadline}</p>}
+      </div>
+      <div className="mt-4 aspect-video w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+        {block.videoUrl ? (
+          <iframe
+            src={block.videoUrl}
+            title={block.headline}
+            className="h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm text-gray-500">Aucune vidéo configurée</div>
+        )}
+      </div>
+      {block.ctaText && (
+        <button type="button" className="mt-4 rounded-lg bg-primary-color px-4 py-2 text-sm font-semibold text-primary-on">
+          {block.ctaText}
+        </button>
+      )}
+    </section>
+  );
+}
+
+function ExpertQuoteView({ block, editable }: { block: ExpertQuoteBlock; editable: boolean }) {
+  return (
+    <section className={blockWrapper(editable)}>
+      <div className="flex items-start gap-4">
+        {block.avatarUrl ? (
+          <img src={block.avatarUrl} alt={block.pilotName} className="h-14 w-14 rounded-full object-cover" />
+        ) : (
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500">Avatar</div>
+        )}
+        <div>
+          <p className="text-sm text-gray-500">{block.circuitName}</p>
+          <h3 className="text-lg font-bold text-gray-900">{block.pilotName}</h3>
+          <p className="text-sm text-gray-500">{block.pilotRole}</p>
+        </div>
+      </div>
+      <blockquote className="mt-4 text-lg font-medium leading-relaxed text-gray-800">“{block.quote}”</blockquote>
+    </section>
+  );
+}
+
+function TelemetryDashboardView({ block, editable }: { block: TelemetryDashboardBlock; editable: boolean }) {
+  return (
+    <section className={blockWrapper(editable)}>
+      <h3 className="text-lg font-bold text-gray-900">Dashboard de télémétrie</h3>
+      <div className="mt-4 grid gap-4 lg:grid-cols-[1.3fr_1fr]">
+        <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+          {block.trackMapImage ? (
+            <img src={block.trackMapImage} alt="Carte circuit" className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex min-h-44 items-center justify-center text-sm text-gray-500">Image du tracé non définie</div>
+          )}
+        </div>
+        <div className="grid gap-2">
+          {block.metrics.map((metric, index) => (
+            <div key={`${metric.label}-${index}`} className="rounded-lg border border-gray-200 bg-white px-3 py-2">
+              <p className="text-xs font-semibold uppercase text-gray-500">{metric.label}</p>
+              <p className="text-base font-bold text-gray-900">{metric.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="mt-4 text-sm leading-6 text-gray-700">{block.technicalFeedback}</p>
+    </section>
+  );
+}
+
+function ChapterContentView({ block, editable }: { block: ChapterContentBlock; editable: boolean }) {
+  const image = (
+    <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+      {block.imageUrl ? (
+        <img src={block.imageUrl} alt={block.title} className="h-full w-full object-cover" />
+      ) : (
+        <div className="flex min-h-52 items-center justify-center text-sm text-gray-500">Image du chapitre non définie</div>
+      )}
+    </div>
+  );
+
+  return (
+    <section className={blockWrapper(editable)}>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {block.imagePosition === "left" && image}
+        <div>
+          <h3 className="text-xl font-bold text-gray-900">{block.title}</h3>
+          <div className="mt-3 whitespace-pre-wrap text-sm leading-6 text-gray-700">{block.contentMarkdown}</div>
+        </div>
+        {block.imagePosition === "right" && image}
+      </div>
+    </section>
+  );
+}
+
+function CircuitOverviewView({ block, editable }: { block: CircuitOverviewBlock; editable: boolean }) {
+  return (
+    <section className={blockWrapper(editable)}>
+      <h3 className="text-xl font-bold text-gray-900">{block.circuitTitle}</h3>
+      <div className="mt-4 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+        <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+          {block.mapImageUrl ? (
+            <img src={block.mapImageUrl} alt={block.circuitTitle} className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex min-h-52 items-center justify-center text-sm text-gray-500">Carte du circuit non définie</div>
+          )}
+        </div>
+        <div className="grid gap-2">
+          {block.stats.map((stat, index) => (
+            <div key={`${stat.label}-${index}`} className="rounded-lg border border-gray-200 bg-white px-3 py-2">
+              <p className="text-xs font-semibold uppercase text-gray-500">{stat.label}</p>
+              <p className="text-base font-bold text-gray-900">{stat.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function renderBlock(block: ExperienceBlock, editable: boolean) {
+  switch (block.type) {
+    case BlockType.HERO_VIDEO:
+      return <HeroVideoView block={block} editable={editable} />;
+    case BlockType.EXPERT_QUOTE:
+      return <ExpertQuoteView block={block} editable={editable} />;
+    case BlockType.TELEMETRY_DASHBOARD:
+      return <TelemetryDashboardView block={block} editable={editable} />;
+    case BlockType.CHAPTER_CONTENT:
+      return <ChapterContentView block={block} editable={editable} />;
+    case BlockType.CIRCUIT_OVERVIEW:
+      return <CircuitOverviewView block={block} editable={editable} />;
+    default:
+      return null;
+  }
+}
+
+export default function ExperienceRenderer({ blocks, editable = false, className = "" }: ExperienceRendererProps) {
+  const sorted = [...blocks].sort((a, b) => a.order - b.order);
+
+  if (!sorted.length) {
+    return (
+      <div className="rounded-xl border border-dashed border-gray-300 px-4 py-10 text-center text-sm text-gray-500">
+        Aucun bloc à afficher
+      </div>
+    );
+  }
+
+  return (
+    <div className={`space-y-4 ${className}`}>
+      {sorted.map((block) => (
+        <div key={block.id}>
+          {editable && (
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-primary-color">
+              {block.type.replaceAll("_", " ")}
+            </p>
+          )}
+          {renderBlock(block, editable)}
+        </div>
+      ))}
+    </div>
+  );
+}

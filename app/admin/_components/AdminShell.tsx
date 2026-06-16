@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Package, LogOut, Menu, X } from "lucide-react";
+import { Package, LogOut, Menu, Route, X } from "lucide-react";
 import { LogOut as logOutFn } from "@/app/_services/AuthService";
 
 interface NavItem {
@@ -12,7 +12,10 @@ interface NavItem {
   icon: React.ElementType;
 }
 
-const NAV_ITEMS: NavItem[] = [{ label: "Produits", href: "/admin/products", icon: Package }];
+const NAV_ITEMS: NavItem[] = [
+  { label: "Produits", href: "/admin/products", icon: Package },
+  { label: "Expériences", href: "/admin/experiences", icon: Route },
+];
 
 function NavLink({ item, onClick }: { item: NavItem; onClick?: () => void }) {
   const pathname = usePathname();
