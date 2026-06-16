@@ -1,19 +1,9 @@
 "use client";
-import { Counter } from "@/functions/Counter";
 import Slider from "./_components/Slider";
-import {
-  ArrowRight,
-  Award,
-  Bike,
-  CheckCircle2,
-  Clock,
-  Gauge,
-  Leaf,
-  Lightbulb,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Clock, Gauge, Sparkles } from "lucide-react";
 import FilledButton from "./_components/ui/Buttons/FilledButton";
 import TireSection from "./_components/TireSection";
+import { FilledIconButton } from "./_components/ui/Buttons/IconButton";
 
 export default function Home() {
   const items = [
@@ -22,7 +12,7 @@ export default function Home() {
       title: "Romain Bardet",
       subtitle: "Ambassadeur Gravel Michelin",
       description:
-        "La performance naît de l'expérience du terrain. Chaque course contribue à développer les pneus de demain.",
+        "Utilisés par plusieurs équipes professionnelles, les pneus Michelin sont testés en conditions réelles et participent au développement des pneus de demain.”",
       image: "/demo.jpg",
       button: "En savoir plus",
     },
@@ -131,6 +121,135 @@ export default function Home() {
         </section>
       </div>
       <TireSection />
+      <section className="site-container pb-18">
+        <div className="relative z-10 flex flex-col gap-14">
+          {/* HEADER + CTA (2 colonnes) */}
+          <div className="grid gap-10 md:grid-cols-2 md:items-center">
+            {/* LEFT - TEXT */}
+            <div className="max-w-2xl">
+              <span className="mb-4 inline-flex rounded-full bg-[var(--yellow-ref)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
+                Avantages & réductions
+              </span>
+
+              <h2 className="typo-h1 mb-6">
+                Le cyclisme devient une expérience connectée
+              </h2>
+
+              <p>
+                Michelin connecte vos sorties à votre quotidien. Strava, GPS,
+                montres connectées… vos kilomètres deviennent une nouvelle façon
+                d’interagir avec la marque.
+              </p>
+            </div>
+
+            {/* RIGHT - CTA STORE */}
+            <div className="flex flex-col gap-4 md:items-end">
+              <div className="flex flex-col gap-4 sm:flex-row md:justify-end">
+                {/* App Store */}
+                <a
+                  href="https://www.apple.com/app-store/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-lg bg-[var(--yellow-ref)] text-[var(--midnight-blue)] px-5 py-3 transition hover:opacity-90"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M17.564 12.568c-.02-2.23 1.82-3.293 1.904-3.343-1.036-1.514-2.648-1.72-3.22-1.744-1.37-.14-2.673.808-3.37.808-.698 0-1.77-.788-2.91-.766-1.497.022-2.89.87-3.66 2.2-1.55 2.687-.395 6.67 1.115 8.85.742 1.07 1.63 2.27 2.794 2.23 1.12-.045 1.54-.72 2.89-.72 1.35 0 1.73.72 2.91.7 1.2-.02 1.96-1.09 2.69-2.17.84-1.2 1.19-2.37 1.21-2.43-.026-.01-2.32-.89-2.34-3.517z" />
+                  </svg>
+
+                  <div className="flex flex-col leading-tight">
+                    <span className="text-xs opacity-80">Télécharger sur</span>
+                    <span className="text-sm font-semibold">App Store</span>
+                  </div>
+                </a>
+
+                {/* Google Play */}
+                <a
+                  href="https://play.google.com/store"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-lg bg-[var(--yellow-ref)] text-[var(--midnight-blue)] px-5 py-3 transition hover:opacity-90"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M3.6 2.2c-.4.3-.6.8-.6 1.4v16.8c0 .6.2 1.1.6 1.4l9.7-9.7L3.6 2.2zM14.2 10.5l2.6 2.6-12.4 6.9 9.8-9.5z" />
+                  </svg>
+
+                  <div className="flex flex-col leading-tight">
+                    <span className="text-xs opacity-80">Disponible sur</span>
+                    <span className="text-sm font-semibold">Google Play</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* CARDS */}
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* CARD 1 */}
+            <div className="group relative overflow-hidden rounded-xl bg-[var(--midnight-blue)] p-6 text-white transition">
+              <div className="mb-4 text-xs uppercase tracking-widest text-[var(--yellow-ref)]">
+                01 — Connecter
+              </div>
+
+              <h3 className="mb-3 text-lg font-semibold">
+                Vos applications sportives
+              </h3>
+
+              <p className="text-sm text-white/70">
+                Synchronisez Strava ou votre montre connectée pour centraliser
+                automatiquement vos activités.
+              </p>
+
+              <div className="mt-6 h-[2px] w-0 bg-[var(--yellow-ref)] transition-all duration-500 group-hover:w-full" />
+            </div>
+
+            {/* CARD 2 */}
+            <div className="group relative overflow-hidden rounded-xl bg-[var(--midnight-blue)] p-6 text-white transition">
+              <div className="mb-4 text-xs uppercase tracking-widest text-[var(--yellow-ref)]">
+                02 — Explorer
+              </div>
+
+              <h3 className="mb-3 text-lg font-semibold">
+                Analyse de vos parcours
+              </h3>
+
+              <p className="text-sm text-white/70">
+                Vos kilomètres, terrains et usages permettent d’identifier les
+                pneus les plus adaptés à votre pratique.
+              </p>
+
+              <div className="mt-6 h-[2px] w-0 bg-[var(--yellow-ref)] transition-all duration-500 group-hover:w-full" />
+            </div>
+
+            {/* CARD 3 */}
+            <div className="group relative overflow-hidden rounded-xl bg-[var(--midnight-blue)] p-6 text-white transition">
+              <div className="mb-4 text-xs uppercase tracking-widest text-[var(--yellow-ref)]">
+                03 — Récompenser
+              </div>
+
+              <h3 className="mb-3 text-lg font-semibold">
+                Avantages exclusifs
+              </h3>
+
+              <p className="text-sm text-white/70">
+                Vos efforts se transforment en réductions et expériences sur les
+                produits Michelin.
+              </p>
+
+              <div className="mt-6 h-[2px] w-0 bg-[var(--yellow-ref)] transition-all duration-500 group-hover:w-full" />
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

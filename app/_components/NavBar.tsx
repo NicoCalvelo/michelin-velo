@@ -60,9 +60,9 @@ export default function NavBar() {
           </Link>
 
           <Link
-            href="/profile"
+            href="/product"
             className={`nav-link-michelin ${
-              isActive("/profile") ? "font-bold text-primary-dark" : ""
+              isActive("/product") ? "font-bold text-primary-dark" : ""
             }`}
           >
             Nos pneus

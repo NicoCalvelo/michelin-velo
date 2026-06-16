@@ -13,21 +13,31 @@ type Item = {
 
 export default function Slider({ items }: { items: Item[] }) {
   const [active, setActive] = useState(0);
+  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
+
   const touchStartX = useRef<number | null>(null);
   const maxSteps = items.length;
 
-  const handleNext = () => setActive((s) => Math.min(maxSteps - 1, s + 1));
+  const handleNext = () => {
+    setActive((s) => Math.min(maxSteps - 1, s + 1));
+    setIsAutoPlayEnabled(false); // 🔥 stop autoplay
+  };
 
-  const handleBack = () => setActive((s) => Math.max(0, s - 1));
+  const handleBack = () => {
+    setActive((s) => Math.max(0, s - 1));
+    setIsAutoPlayEnabled(false); // 🔥 stop autoplay
+  };
 
-  // 🔥 AUTO PLAY 5s (AJOUT UNIQUEMENT)
+  // 🔥 AUTO PLAY 5s (désactivé après interaction)
   useEffect(() => {
+    if (!isAutoPlayEnabled) return;
+
     const interval = setInterval(() => {
       setActive((s) => (s < maxSteps - 1 ? s + 1 : 0));
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [maxSteps]);
+  }, [maxSteps, isAutoPlayEnabled]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -35,9 +45,12 @@ export default function Slider({ items }: { items: Item[] }) {
 
   const onTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current == null) return;
+
     const dx = e.changedTouches[0].clientX - touchStartX.current;
+
     if (dx > 40) handleBack();
     else if (dx < -40) handleNext();
+
     touchStartX.current = null;
   };
 
