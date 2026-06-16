@@ -112,7 +112,6 @@ export default function ImageManager({
         onDrop={onNewFiles}
         accept="image/*"
         multiple
-        maxFileSize={10}
         variant={DropZoneVariant.DASHED}
         size={DropZoneSize.MD}
         helperText="Glissez-déposez vos images ici"

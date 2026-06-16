@@ -110,7 +110,7 @@ export default function DropableZone({
   accept = "*",
   multiple = false,
   disabled = false,
-  maxFileSize = 1 * 1024 * 1024, // 1MB par défaut
+  maxFileSize = 5 * 1024 * 1024, // 5MB par défaut
   maxFiles = multiple ? 10 : 1,
   variant = DropZoneVariant.DASHED,
   size = DropZoneSize.MD,

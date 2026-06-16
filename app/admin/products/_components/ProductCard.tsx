@@ -21,7 +21,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, onDelete }: ProductCardProps) {
   const mainImage = product.images?.[0];
-  const statusEntry = PRODUCT_STATUS.find((s) => s.value === product.status);
+  const statusEntry = Object.values(PRODUCT_STATUS).find((s) => s.value === product.status);
   const prices = product.variants.map((variant) => variant.price);
   const minPrice = prices.length ? Math.min(...prices) : null;
   const maxPrice = prices.length ? Math.max(...prices) : null;
