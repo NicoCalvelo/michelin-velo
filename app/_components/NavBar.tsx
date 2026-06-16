@@ -1,48 +1,110 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import FilledButton from "./ui/Buttons/FilledButton";
+import { Disc } from "lucide-react";
 
 export default function NavBar() {
+  const pathname = usePathname();
+
+  const [show, setShow] = useState(true);
+
+  const isActive = (path: string) => pathname === path;
+
+  // Hide on scroll down / show on scroll up
+  useEffect(() => {
+    let lastScroll = window.scrollY;
+
+    const handleScroll = () => {
+      const current = window.scrollY;
+
+      if (current < lastScroll) {
+        setShow(true);
+      } else {
+        setShow(false);
+      }
+
+      lastScroll = current;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="nav-bar flex items-center justify-between px-5 py-3">
-      <div className="flex items-center gap-3">
-        <span className="nav-logo text-base font-medium tracking-wide">
-          LOGO
-        </span>
-      </div>
+    <header
+      className={`nav-bar fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 transition-transform duration-300 ${
+        show ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
+      <div className="site-container flex items-center justify-between py-4">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <span className="text-lg font-bold tracking-wide text-primary-dark">
+            MICHELIN
+          </span>
+        </div>
 
-      <nav className="nav-links flex gap-4 text-sm">
-        <Link href="/" className="nav-link px-2 py-1 rounded hover:bg-white/10">
-          Accueil
-        </Link>
-        <Link
-          href="/profile"
-          className="nav-link px-2 py-1 rounded hover:bg-white/10"
-        >
-          Nos pneus
-        </Link>
-        <Link
-          href="/challenges"
-          className="nav-link px-2 py-1 rounded hover:bg-white/10"
-        >
-          L'expertise Michelin
-        </Link>
-        <Link
-          href="/challenges"
-          className="nav-link px-2 py-1 rounded hover:bg-white/10"
-        >
-          Défis
-        </Link>
-        <Link
-          href="/product"
-          className="nav-link px-2 py-1 rounded hover:bg-white/10"
-        >
-          En mouvement pour demain
-        </Link>
-      </nav>
+        {/* Navigation */}
+        <nav className="hidden md:flex items-center gap-10 text-sm">
+          <Link
+            href="/"
+            className={`nav-link-michelin ${
+              isActive("/") ? "font-bold text-primary-dark" : ""
+            }`}
+          >
+            Accueil
+          </Link>
 
-      <div>
-        <FilledButton>Quel pneu est fait pour vous ?</FilledButton>
+          <Link
+            href="/profile"
+            className={`nav-link-michelin ${
+              isActive("/profile") ? "font-bold text-primary-dark" : ""
+            }`}
+          >
+            Nos pneus
+          </Link>
+
+          <Link
+            href="/challenges"
+            className={`nav-link-michelin ${
+              isActive("/challenges") ? "font-bold text-primary-dark" : ""
+            }`}
+          >
+            L’expertise Michelin
+          </Link>
+
+          <Link
+            href="/challenges"
+            className={`nav-link-michelin ${
+              isActive("/challenges") ? "font-bold text-primary-dark" : ""
+            }`}
+          >
+            Défis
+          </Link>
+
+          <Link
+            href="/product"
+            className={`nav-link-michelin ${
+              isActive("/product") ? "font-bold text-primary-dark" : ""
+            }`}
+          >
+            En mouvement pour demain
+          </Link>
+        </nav>
+
+        {/* CTA */}
+        <div className="hidden md:block">
+          <FilledButton>
+            <span className="flex items-center gap-2">
+              <Disc size={18} />
+              Quel pneu est fait pour vous ?
+            </span>
+          </FilledButton>
+        </div>
       </div>
     </header>
   );

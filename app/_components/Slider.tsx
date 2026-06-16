@@ -55,7 +55,7 @@ export default function Slider({ items }: { items: Item[] }) {
           {items.map((it) => (
             <div key={it.id} className="flex-[0_0_100%] w-full">
               <div
-                className="relative min-h-[600px] w-full shadow overflow-hidden bg-cover bg-center"
+                className="relative min-h-[700px] w-full shadow overflow-hidden bg-cover bg-center"
                 style={{
                   backgroundImage: it.image ? `url(${it.image})` : "none",
                   backgroundColor: it.image ? "transparent" : "#eeeeee",

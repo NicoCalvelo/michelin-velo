@@ -19,14 +19,18 @@ export default function FilledButton({
   ...props
 }: FilledButtonProps) {
   if (!className.includes("bg-"))
-    className = "bg-secondary-color text-secondary-on" + className;
+    className = "bg-secondary-color text-secondary-on " + className;
+
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       type={type}
       {...props}
-      className={`btn transition-all ${className} ` + (hasIcon ? " !pl-4 " : " ")}
+      className={
+        `btn font-normal transition-all ${className} ` +
+        (hasIcon ? " !pl-4 " : " ")
+      }
     >
       {children}
     </button>
@@ -67,7 +71,9 @@ export function DangerFilledButton({
 }: FilledButtonProps) {
   return (
     <FilledButton
-      className={"bg-error-color text-error-on hover:bg-error-color/90 " + className}
+      className={
+        "bg-error-color text-error-on hover:bg-error-color/90 " + className
+      }
       hasIcon={hasIcon}
       type={type}
       onClick={onClick}
@@ -90,7 +96,10 @@ export function WarningFilledButton({
 }: FilledButtonProps) {
   return (
     <FilledButton
-      className={"bg-warning-color text-warning-on hover:bg-warning-color/90 " + className}
+      className={
+        "bg-warning-color text-warning-on hover:bg-warning-color/90 " +
+        className
+      }
       hasIcon={hasIcon}
       type={type}
       onClick={onClick}
@@ -113,7 +122,9 @@ export function InfoFilledButton({
 }: FilledButtonProps) {
   return (
     <FilledButton
-      className={"bg-info-color text-info-on hover:bg-info-color/90 " + className}
+      className={
+        "bg-info-color text-info-on hover:bg-info-color/90 " + className
+      }
       hasIcon={hasIcon}
       type={type}
       onClick={onClick}
