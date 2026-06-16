@@ -4,6 +4,7 @@ import Slider from "./_components/Slider";
 import {
   ArrowRight,
   Award,
+  Bike,
   CheckCircle2,
   Clock,
   Gauge,
@@ -12,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import FilledButton from "./_components/ui/Buttons/FilledButton";
+import TireSection from "./_components/TireSection";
 
 export default function Home() {
   const items = [
@@ -29,18 +31,20 @@ export default function Home() {
       title: "En mouvement pour demain",
       subtitle: "Nos actions pour un cyclisme plus durable",
       image: "/demo.jpg",
+      button: "En savoir plus",
     },
     {
       id: 3,
       title: "Pneu Course",
       subtitle: "Léger et rapide",
       image: "/demo.jpg",
+      button: "Voir le produit",
     },
   ];
 
   return (
-    <main className="flex flex-col gap-24">
-      <div className="relative pb-20">
+    <main className="flex flex-col">
+      <div className="relative">
         <section>
           <Slider items={items} />
         </section>
@@ -116,135 +120,17 @@ export default function Home() {
               </div>
 
               <span className="absolute -left-2 top-4 animate-bounce rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">
-                Été
+                Route
               </span>
 
               <span className="absolute -right-2 bottom-6 animate-bounce rounded-full bg-white/10 px-3 py-1 text-xs font-semibold [animation-delay:300ms]">
-                Hiver
+                Cross
               </span>
             </div>
           </div>
         </section>
       </div>
-      <section className="flex flex-col gap-6 justify-center text-center bg-[var(--midnight-blue)] text-white py-12 px-6">
-        <h1>Quelques chiffres</h1>
-        <div className="flex gap-8 justify-center mt-4">
-          <div className="border-2 border-[var(--primary)] rounded-lg p-4 text-center flex flex-col justify-center items-center">
-            <Award className="w-15 h-15 mb-4" aria-hidden="true" />
-            <Counter
-              end={10000}
-              prefix="+ "
-              style={{ color: "var(--yellow-ref)" }}
-            />
-            <p>Brevets déposés</p>
-          </div>
-          <div className="border-2 border-[var(--primary)] rounded-lg p-4 text-center flex flex-col justify-center items-center">
-            <Leaf className="w-15 h-15 mb-4" aria-hidden="true" />
-            <Counter
-              end={40}
-              suffix="%"
-              style={{ color: "var(--yellow-ref)" }}
-            />
-            <p>
-              de matériaux durables <br />
-              d'ici 2030
-            </p>
-          </div>
-          <div className="border-2 border-[var(--primary)] rounded-lg p-4 text-center flex flex-col justify-center items-center">
-            <Lightbulb className="w-15 h-15 mb-4" aria-hidden="true" />
-            <Counter end={130} style={{ color: "var(--yellow-ref)" }} />
-            <p>ans d'innovation</p>
-          </div>
-        </div>
-      </section>
-      <section className="flex flex-col gap-6 justify-center text-center">
-        <h1>Nos pneus</h1>
-        <div className="flex justify-center mt-4 flex-wrap gap-4 items-center">
-          <div>
-            <div className="flex justify-center mt-4">
-              <div className="group w-64 h-64 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-sm relative transition-transform duration-300 hover:scale-105 cursor-pointer">
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: "url('/demo.jpg')" }}
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/40"
-                  aria-hidden="true"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <h2 className="typo-h1 text-white m-0 transition-transform duration-300 group-hover:-translate-y-2">
-                    VTT
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div className="flex justify-center mt-4">
-              <div className="group w-64 h-64 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-sm relative transition-transform duration-300 hover:scale-105 cursor-pointer">
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: "url('/demo.jpg')" }}
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/40"
-                  aria-hidden="true"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <h2 className="typo-h1 text-white m-0 transition-transform duration-300 group-hover:-translate-y-2">
-                    Gravel et Cross
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div className="flex justify-center mt-4">
-              <div className="group w-64 h-64 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-sm relative transition-transform duration-300 hover:scale-105 cursor-pointer">
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: "url('/demo.jpg')" }}
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/40"
-                  aria-hidden="true"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <h2 className="typo-h1 text-white m-0 transition-transform duration-300 group-hover:-translate-y-2">
-                    Vélo de course
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div className="flex justify-center mt-4">
-              <div className="group w-64 h-64 md:w-80 md:h-80 rounded-lg overflow-hidden shadow-sm relative transition-transform duration-300 hover:scale-105 cursor-pointer">
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: "url('/demo.jpg')" }}
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/40"
-                  aria-hidden="true"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <h2 className="typo-h1 text-white m-0 transition-transform duration-300 group-hover:-translate-y-2">
-                    Tour et ville
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <TireSection />
     </main>
   );
 }

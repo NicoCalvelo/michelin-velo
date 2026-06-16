@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FilledButton from "./ui/Buttons/FilledButton";
 
 type Item = {
@@ -17,7 +17,17 @@ export default function Slider({ items }: { items: Item[] }) {
   const maxSteps = items.length;
 
   const handleNext = () => setActive((s) => Math.min(maxSteps - 1, s + 1));
+
   const handleBack = () => setActive((s) => Math.max(0, s - 1));
+
+  // 🔥 AUTO PLAY 5s (AJOUT UNIQUEMENT)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActive((s) => (s < maxSteps - 1 ? s + 1 : 0));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [maxSteps]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -39,7 +49,7 @@ export default function Slider({ items }: { items: Item[] }) {
         className="overflow-hidden w-full"
       >
         <div
-          className="flex transition-transform duration-300 ease-out w-full"
+          className="flex w-full transition-transform duration-700 ease-in-out"
           style={{ transform: `translateX(-${active * 100}%)` }}
         >
           {items.map((it) => (
@@ -51,25 +61,18 @@ export default function Slider({ items }: { items: Item[] }) {
                   backgroundColor: it.image ? "transparent" : "#eeeeee",
                 }}
               >
-                <div
-                  className="absolute inset-0 bg-black/50"
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"
-                  aria-hidden="true"
-                />
+                <div className="absolute inset-0 bg-black/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
 
                 <button
                   onClick={handleBack}
-                  aria-label="Précédent"
                   className="absolute top-1/2 left-2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full text-white bg-[var(--color-primary)] hover:opacity-90"
                 >
                   ‹
                 </button>
+
                 <button
                   onClick={handleNext}
-                  aria-label="Suivant"
                   className="absolute top-1/2 right-2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full text-white bg-[var(--color-primary)] hover:opacity-90"
                 >
                   ›
@@ -78,22 +81,29 @@ export default function Slider({ items }: { items: Item[] }) {
                 <div className="absolute bottom-40 left-1/2 -translate-x-1/2 z-20">
                   <div className="flex flex-col justify-center items-center text-white">
                     <h1 className="!text-6xl text-align-center">{it.title}</h1>
+
                     <div
                       className="w-24 h-1 rounded mt-4 mb-4"
                       style={{
                         backgroundColor: "var(--color-secondary, #FCE500)",
                       }}
-                      aria-hidden="true"
                     />
-                    {it.subtitle && <p className="!text-3xl">{it.subtitle}</p>}
+
+                    {it.subtitle && (
+                      <p
+                        className={`!text-3xl ${it.description ? "" : "mb-8"}`}
+                      >
+                        {it.subtitle}
+                      </p>
+                    )}
+
                     {it.description && (
                       <p className="max-w-xl mt-4 text-center mb-8">
                         {it.description}
                       </p>
                     )}
-                    {it.button && (
-                      <FilledButton className="">{it.button}</FilledButton>
-                    )}
+
+                    {it.button && <FilledButton>{it.button}</FilledButton>}
                   </div>
                 </div>
               </div>
