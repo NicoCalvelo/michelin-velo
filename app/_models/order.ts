@@ -6,6 +6,7 @@ export interface OrderItem {
   productId: string;
   productName: string; // Snapshot au moment de la commande
   productImageUrl?: string; // Snapshot de l'image principale
+  variantTitle: string; // Déclinaison sélectionnée (snapshot)
   price: number; // Prix unitaire en centimes au moment de la commande
   quantity: number;
   subtotal: number; // price * quantity, en centimes

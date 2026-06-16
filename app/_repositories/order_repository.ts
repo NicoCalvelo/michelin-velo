@@ -100,6 +100,11 @@ export default class OrderRepository {
       throw new Error("La commande doit contenir au moins un article");
     }
 
+    const hasMissingVariant = orderData.items.some((item) => !item.variantTitle?.trim());
+    if (hasMissingVariant) {
+      throw new Error("Chaque article de la commande doit inclure une déclinaison");
+    }
+
     const docData: Omit<Order, "id" | "path"> = {
       ...orderData,
       status: orderData.status ?? "pending",

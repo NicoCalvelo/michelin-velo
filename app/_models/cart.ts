@@ -4,6 +4,7 @@ export interface CartItem {
   productId: string;
   productName: string; // Snapshot au moment de l'ajout
   productImageUrl?: string; // Snapshot de l'image principale
+  variantTitle: string; // Déclinaison sélectionnée (ex: "25-622 (700x25HOOKED)")
   price: number; // Prix unitaire en centimes au moment de l'ajout
   quantity: number;
   subtotal: number; // price * quantity, en centimes

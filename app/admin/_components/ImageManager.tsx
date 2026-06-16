@@ -52,11 +52,7 @@ export default function ImageManager({
               onDrop={() => handleDrop(index)}
               className="relative group rounded-xl overflow-hidden border border-gray-200 bg-gray-50 aspect-square cursor-grab active:cursor-grabbing"
             >
-              <img
-                src={img.url}
-                alt={img.altText ?? img.fileName}
-                className="w-full h-full object-cover"
-              />
+              <img src={img.url} alt={img.altText ?? img.fileName} className="w-full h-full object-cover" />
               {/* Drag handle */}
               <div className="absolute top-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 rounded p-0.5">
                 <GripVertical className="w-4 h-4 text-white" />
@@ -91,12 +87,11 @@ export default function ImageManager({
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {pendingFiles.map((file, index) => (
-              <div key={index} className="relative group rounded-xl overflow-hidden border-2 border-dashed border-blue-300 bg-blue-50 aspect-square">
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt={file.name}
-                  className="w-full h-full object-cover"
-                />
+              <div
+                key={index}
+                className="relative group rounded-xl overflow-hidden border-2 border-dashed border-blue-300 bg-blue-50 aspect-square"
+              >
+                <img src={URL.createObjectURL(file)} alt={file.name} className="w-full h-full object-cover" />
                 <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <IconButton
                     onClick={() => onPendingDelete(index)}
@@ -120,13 +115,8 @@ export default function ImageManager({
         maxFileSize={10}
         variant={DropZoneVariant.DASHED}
         size={DropZoneSize.MD}
-        helperText="PNG, JPG, WebP — 10 Mo max par image"
-      >
-        <div className="flex flex-col items-center gap-2 text-gray-500">
-          <ImagePlus className="w-8 h-8" />
-          <span className="text-sm font-medium">Glisser des images ici ou cliquer pour parcourir</span>
-        </div>
-      </DropableZone>
+        helperText="Glissez-déposez vos images ici"
+      />
     </div>
   );
 }

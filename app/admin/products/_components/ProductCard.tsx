@@ -22,10 +22,17 @@ interface ProductCardProps {
 export default function ProductCard({ product, onDelete }: ProductCardProps) {
   const mainImage = product.images?.[0];
   const statusEntry = PRODUCT_STATUS.find((s) => s.value === product.status);
-  const priceFormatted = (product.price / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
-  const compareFormatted = product.compareAtPrice
-    ? (product.compareAtPrice / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })
-    : null;
+  const prices = product.variants.map((variant) => variant.price);
+  const minPrice = prices.length ? Math.min(...prices) : null;
+  const maxPrice = prices.length ? Math.max(...prices) : null;
+  const totalStock = product.variants.reduce((sum, variant) => sum + variant.stock, 0);
+
+  const priceLabel =
+    minPrice === null
+      ? "Prix indisponible"
+      : minPrice === maxPrice
+        ? (minPrice / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })
+        : `${(minPrice / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })} - ${(maxPrice! / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })}`;
 
   return (
     <OutlinedCard className="flex flex-col overflow-hidden">
@@ -51,12 +58,9 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
         <p className="text-xs text-gray-400 uppercase tracking-wide">{product.brand}</p>
         <p className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">{product.name}</p>
         <div className="flex items-baseline gap-2 mt-auto pt-2">
-          <span className="font-bold text-gray-900">{priceFormatted}</span>
-          {compareFormatted && (
-            <span className="text-xs text-gray-400 line-through">{compareFormatted}</span>
-          )}
+          <span className="font-bold text-gray-900">{priceLabel}</span>
         </div>
-        <p className="text-xs text-gray-500">Stock : {product.stock}</p>
+        <p className="text-xs text-gray-500">Stock total : {totalStock}</p>
       </div>
 
       {/* Actions */}

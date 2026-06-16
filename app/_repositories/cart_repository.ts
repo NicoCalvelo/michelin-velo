@@ -13,6 +13,10 @@ export default class CartRepository {
     return doc(db, this.COLLECTION_PATH, userId);
   }
 
+  private static sameCartLine(item: CartItem, productId: string, variantTitle: string) {
+    return item.productId === productId && item.variantTitle === variantTitle;
+  }
+
   // GET ==========================================================
 
   /** Récupère le panier d'un utilisateur (lui-même ou admin) */
@@ -46,7 +50,9 @@ export default class CartRepository {
     const cart = await this.getCart(userId);
     const existingItems: CartItem[] = cart?.items ?? [];
 
-    const existingIndex = existingItems.findIndex((i) => i.productId === itemData.productId);
+    const existingIndex = existingItems.findIndex((i) =>
+      this.sameCartLine(i, itemData.productId, itemData.variantTitle),
+    );
 
     let updatedItems: CartItem[];
     if (existingIndex >= 0) {
@@ -75,7 +81,7 @@ export default class CartRepository {
    * Définit la quantité exacte d'un article.
    * Si quantity <= 0, l'article est retiré du panier.
    */
-  static async updateItemQuantity(productId: string, quantity: number): Promise<Cart> {
+  static async updateItemQuantity(productId: string, variantTitle: string, quantity: number): Promise<Cart> {
     if (!auth.currentUser) throw new Error("Utilisateur non authentifié");
     const userId = auth.currentUser.uid;
 
@@ -84,10 +90,10 @@ export default class CartRepository {
 
     let updatedItems: CartItem[];
     if (quantity <= 0) {
-      updatedItems = existingItems.filter((i) => i.productId !== productId);
+      updatedItems = existingItems.filter((i) => !this.sameCartLine(i, productId, variantTitle));
     } else {
       updatedItems = existingItems.map((i) =>
-        i.productId === productId ? { ...i, quantity, subtotal: i.price * quantity } : i,
+        this.sameCartLine(i, productId, variantTitle) ? { ...i, quantity, subtotal: i.price * quantity } : i,
       );
     }
 
@@ -95,12 +101,12 @@ export default class CartRepository {
   }
 
   /** Retire un article du panier */
-  static async removeItem(productId: string): Promise<Cart> {
+  static async removeItem(productId: string, variantTitle: string): Promise<Cart> {
     if (!auth.currentUser) throw new Error("Utilisateur non authentifié");
     const userId = auth.currentUser.uid;
 
     const cart = await this.getCart(userId);
-    const updatedItems = (cart?.items ?? []).filter((i) => i.productId !== productId);
+    const updatedItems = (cart?.items ?? []).filter((i) => !this.sameCartLine(i, productId, variantTitle));
 
     return this.saveCart(userId, updatedItems);
   }

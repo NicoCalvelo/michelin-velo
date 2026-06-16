@@ -11,27 +11,35 @@ import ProductForm, { ProductFormData } from "@/app/admin/_components/ProductFor
 import Spinner from "@/app/_components/ui/Components/Spinner";
 
 function buildUpdateData(form: ProductFormData, existingImages: StorageImage[]) {
+  const variants = form.variants.map((variant) => ({
+    title: variant.title.trim(),
+    dimension: {
+      diameter: Number(variant.diameterValue),
+      width: Number(variant.widthValue),
+      unit: variant.unit,
+      isoSize: variant.isoSize || undefined,
+    },
+    weight: variant.weight ? Number(variant.weight) : undefined,
+    barMinPressure: variant.barMinPressure ? Number(variant.barMinPressure) : undefined,
+    barMaxPressure: variant.barMaxPressure ? Number(variant.barMaxPressure) : undefined,
+    psiMinPressure: variant.psiMinPressure ? Number(variant.psiMinPressure) : undefined,
+    psiMaxPressure: variant.psiMaxPressure ? Number(variant.psiMaxPressure) : undefined,
+    bead: variant.bead || undefined,
+    sidewallColor: variant.sidewallColor || undefined,
+    price: Math.round(Number(variant.priceEuros) * 100),
+    stock: Number(variant.stock),
+  }));
+  const totalStock = variants.reduce((sum, variant) => sum + variant.stock, 0);
+
   return {
     name: form.name,
     slug: form.slug,
     brand: form.brand,
-    status: form.status as "active" | "archived" | "out_of_stock",
+    status: totalStock === 0 ? "out_of_stock" : (form.status as "active" | "archived" | "out_of_stock"),
     shortDescription: form.shortDescription,
     description: form.description,
-    technicalDetails: form.technicalDetails || undefined,
     bikeType: form.bikeType as BikeType[],
-    dimension: {
-      diameter: Number(form.diameterValue),
-      width: Number(form.widthValue),
-      unit: form.unit,
-      isoSize: form.isoSize || undefined,
-    },
-    weight: form.weight ? Number(form.weight) : undefined,
-    minPressure: form.minPressure ? Number(form.minPressure) : undefined,
-    maxPressure: form.maxPressure ? Number(form.maxPressure) : undefined,
-    price: Math.round(Number(form.priceEuros) * 100),
-    compareAtPrice: form.compareAtPriceEuros ? Math.round(Number(form.compareAtPriceEuros) * 100) : undefined,
-    stock: Number(form.stock),
+    variants,
     tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : undefined,
     images: existingImages,
   };

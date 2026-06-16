@@ -11,6 +11,20 @@ export interface ProductDimension {
   isoSize?: string; // ex: "25-622" (norme ISO/ETRTO)
 }
 
+export interface ProductVariant {
+  title: string; // ex: "25-622 (700x25HOOKED)"
+  dimension: ProductDimension;
+  weight?: number; // en grammes
+  barMinPressure?: number; // en bar
+  barMaxPressure?: number; // en bar
+  psiMinPressure?: number; // en psi
+  psiMaxPressure?: number; // en psi
+  bead?: string; // ex: "Foldable Bead"
+  sidewallColor?: string; // ex: "BLACK"
+  price: number; // Prix en centimes (ex: 2999 = 29,99€)
+  stock: number;
+}
+
 export interface Product {
   id?: string;
   path?: string;
@@ -19,15 +33,8 @@ export interface Product {
   brand: string;
   shortDescription: string; // Résumé court (pour les cartes produit)
   description: string; // Description longue (markdown ou texte riche)
-  technicalDetails?: string; // Détails techniques, composition, etc.
   bikeType: BikeType[];
-  dimension: ProductDimension;
-  weight?: number; // en grammes
-  maxPressure?: number; // en bar
-  minPressure?: number; // en bar
-  price: number; // Prix en centimes (ex: 2999 = 29,99€)
-  compareAtPrice?: number; // Prix barré, en centimes
-  stock: number;
+  variants: ProductVariant[];
   status: keyof typeof PRODUCT_STATUS; // "active", "archived", "out_of_stock"
   images: StorageImage[]; // images[0] = image principale
   tags?: string[];
