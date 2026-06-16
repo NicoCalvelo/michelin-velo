@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Footer from "./_components/Footer";
+import PublicChrome from "./_components/PublicChrome";
 import { Toasts } from "@/app/_components/ui/Components/Toasts";
 import SignInModal from "./_components/auth/SignInModal";
 import ConfirmationModal from "@/app/_components/ui/Dialogs/ConfirmationModal";
@@ -21,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body>
-        {children}
+        <PublicChrome>{children}</PublicChrome>
         <Footer />
         <div id="toasts"></div>
         <div id="confirmation_dialogs"></div>

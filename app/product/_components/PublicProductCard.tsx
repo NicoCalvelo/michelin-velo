@@ -6,18 +6,10 @@ import Link from "next/link";
 import { ArrowRight, ImageOff, ShieldCheck, Sparkles } from "lucide-react";
 import { Product } from "@/app/_models/product";
 import OutlinedCard from "@/app/_components/ui/Cards/OutlinedCard";
+import { getProductPriceRange, getTotalStock } from "../_utils/productDisplay";
 
 interface PublicProductCardProps {
   product: Product;
-}
-
-function formatPrice(value?: number) {
-  if (typeof value !== "number") return "Prix à confirmer";
-
-  return (value / 100).toLocaleString("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  });
 }
 
 function getBikeTypeLabel(product: Product) {
@@ -30,21 +22,12 @@ function getBikeTypeLabel(product: Product) {
     electric: "E-bike",
   };
 
-  return product.bikeType.map((type) => labels[type] ?? type).join(" / ");
+  return (product.bikeType ?? []).map((type) => labels[type] ?? type).join(" / ");
 }
 
 export default function PublicProductCard({ product }: PublicProductCardProps) {
   const mainImage = product.images?.[0];
-  const prices = product.variants.map((variant) => variant.price);
-  const minPrice = prices.length ? Math.min(...prices) : null;
-  const maxPrice = prices.length ? Math.max(...prices) : null;
-
-  const priceLabel =
-    minPrice === null
-      ? "Prix indisponible"
-      : minPrice === maxPrice
-        ? (minPrice / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })
-        : `${(minPrice / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })} - ${(maxPrice! / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })}`;
+  const totalStock = getTotalStock(product);
 
   return (
     <OutlinedCard className="group flex h-full flex-col overflow-hidden bg-white p-0 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary-color hover:shadow-md">
@@ -94,7 +77,7 @@ export default function PublicProductCard({ product }: PublicProductCardProps) {
             <div>
               <p className="text-xs text-gray-500">À partir de</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black text-primary-color">{priceLabel}</span>
+                <span className="text-xl font-black text-primary-color">{getProductPriceRange(product)}</span>
               </div>
             </div>
 
@@ -105,7 +88,7 @@ export default function PublicProductCard({ product }: PublicProductCardProps) {
 
           <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-success-dark">
             <ShieldCheck className="h-4 w-4" />
-            En stock pour achat e-retail
+            {totalStock > 0 ? `${totalStock} en stock pour achat e-retail` : "Stock à confirmer"}
           </p>
         </div>
       </Link>

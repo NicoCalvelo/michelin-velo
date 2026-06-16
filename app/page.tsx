@@ -1,5 +1,4 @@
 "use client";
-import NavBar from "./_components/NavBar";
 import { ArrowRight, Clock, Gauge, Sparkles } from "lucide-react";
 import FilledButton from "./_components/ui/Buttons/FilledButton";
 import TireSection from "./_components/TireSection";
@@ -34,7 +33,6 @@ export default function Home() {
 
   return (
     <>
-      <NavBar />
       <main className="flex flex-col">
         <div className="relative">
           <section>

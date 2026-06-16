@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import FilledButton from "./ui/Buttons/FilledButton";
 import { Disc } from "lucide-react";
 
 export default function NavBar() {
@@ -98,12 +97,12 @@ export default function NavBar() {
 
         {/* CTA */}
         <div className="hidden md:block">
-          <FilledButton>
+          <Link href="/quiz" className="btn bg-secondary-color text-secondary-on hover:bg-secondary-dark">
             <span className="flex items-center gap-2">
               <Disc size={18} />
               Quel pneu est fait pour vous ?
             </span>
-          </FilledButton>
+          </Link>
         </div>
       </div>
     </header>

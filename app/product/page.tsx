@@ -2,13 +2,11 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Award, Bike, Filter, Leaf, RotateCcw, ShieldCheck, ShoppingBag } from "lucide-react";
+import { Award, Filter, Leaf, RotateCcw, ShieldCheck, ShoppingBag } from "lucide-react";
 import { Product } from "@/app/_models/product";
-import FilledButton from "@/app/_components/ui/Buttons/FilledButton";
 import SearchBar from "@/app/_components/ui/Components/SearchBar";
 import Spinner from "@/app/_components/ui/Components/Spinner";
 import PublicProductCard from "./_components/PublicProductCard";
-import NavBar from "../_components/NavBar";
 
 const FILTERS = [
   { value: "all", label: "Tous" },
@@ -122,38 +120,33 @@ export default function ProductsPage() {
   }, [activeFilter, products, query]);
 
   return (
-    <>
-      <NavBar />
-      <main className="min-h-screen bg-background-dark">
-        <section className="bg-primary-dark text-primary-on pt-28">
-          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-14">
-            <div className="flex flex-col justify-center gap-6">
-              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-secondary-color px-4 py-2 text-sm font-bold text-secondary-on">
-                <Bike className="h-4 w-4" />
-                Michelin Bike
-              </span>
-
-              <div className="space-y-4">
-                <h1 className="max-w-3xl text-4xl font-black leading-tight text-white sm:text-5xl">
-                  Trouvez le pneu qui suit votre rythme.
-                </h1>
-                <p className="max-w-2xl text-base leading-7 text-primary-light sm:text-lg">
-                  Vous roulez pour gagner du temps, garder le contrôle ou partir plus loin. Choisissez selon votre
-                  pratique, comparez les bénéfices, puis passez à l&apos;achat en ligne sans détour.
-                </p>
-              </div>
+    <main className="min-h-screen bg-background-dark">
+      <section className="bg-primary-dark text-primary-on">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-14">
+          <div className="flex flex-col justify-center gap-6">
+            <div className="space-y-4">
+              <h1 className="max-w-3xl text-4xl font-black leading-tight text-white sm:text-5xl">
+                Trouvez le pneu qui suit votre rythme.
+              </h1>
+              <p className="max-w-2xl text-base leading-7 text-primary-light sm:text-lg">
+                Vous roulez pour gagner du temps, garder le contrôle ou partir plus loin. Choisissez selon votre pratique, comparez les bénéfices, puis passez à l&apos;achat en ligne sans détour.
+              </p>
+            </div>
 
             <div className="flex flex-wrap gap-3">
-              <FilledButton className="bg-secondary-color text-secondary-on hover:bg-secondary-dark" hasIcon>
+              <Link
+                href="#catalogue"
+                className="btn inline-flex items-center gap-2 bg-secondary-color text-secondary-on hover:bg-secondary-dark"
+              >
                 <ShoppingBag className="h-4 w-4" />
-                Voir les produits
-              </FilledButton>
+                Consulter le catalogue
+              </Link>
               <Link
                 href="/quiz"
                 className="inline-flex items-center gap-2 rounded-lg border border-white/60 bg-transparent px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
               >
                 <Filter className="h-4 w-4" />
-                Affiner ma pratique
+                Quel pneu pour moi ?
               </Link>
             </div>
           </div>
@@ -172,10 +165,10 @@ export default function ProductsPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-          <div className="mb-8 grid gap-4 md:grid-cols-3">
-            {BRAND_PROOFS.map((proof) => {
-              const Icon = proof.icon;
+      <section id="catalogue" className="mx-auto max-w-7xl scroll-mt-24 px-4 pt-8 sm:px-6 lg:px-8">
+        <div className="mb-8 grid gap-4 md:grid-cols-3">
+          {BRAND_PROOFS.map((proof) => {
+            const Icon = proof.icon;
 
               return (
                 <article key={proof.title} className="rounded-lg border border-gray-200 bg-white p-4">
@@ -254,6 +247,5 @@ export default function ProductsPage() {
           )}
         </section>
       </main>
-    </>
   );
 }
