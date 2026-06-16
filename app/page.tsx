@@ -1,6 +1,6 @@
 "use client";
+import Link from "next/link";
 import { ArrowRight, Clock, Gauge, Sparkles } from "lucide-react";
-import FilledButton from "./_components/ui/Buttons/FilledButton";
 import TireSection from "./_components/TireSection";
 import Slider from "./_components/ui/Sliders/Slider";
 
@@ -83,19 +83,14 @@ export default function Home() {
                   </div>
                 </div>
 
-                <FilledButton
-                  type="button"
-                  onClick={() => {
-                    // Navigation vers le quiz
-                  }}
-                >
-                  <span className="relative z-10">Démarrer le quiz</span>
-                  <ArrowRight
-                    className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
-                    aria-hidden="true"
-                  />
-                </FilledButton>
-              </div>
+              <Link href="/quiz" className="btn bg-secondary-color text-secondary-on">
+                <span className="relative z-10">Démarrer le quiz</span>
+                <ArrowRight
+                  className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </Link>
+            </div>
 
               <div className="relative flex h-56 w-56 shrink-0 items-center justify-center md:h-64 md:w-64">
                 <div className="absolute h-full w-full rounded-full border border-white/10" />
