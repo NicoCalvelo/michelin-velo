@@ -188,8 +188,6 @@ export default function ProductDetailPage() {
     );
   }
 
-  const mainImage = productImages[activeImageIndex];
-
   return (
     <main className="min-h-screen bg-background-dark">
       <button
@@ -349,7 +347,15 @@ export default function ProductDetailPage() {
             <p className="mt-2 text-3xl font-black text-primary-color">{priceRange}</p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <FilledButton className="bg-primary-color text-primary-on justify-center hover:bg-primary-dark" hasIcon>
+              <FilledButton
+                onClick={() => {
+                  if (product.buyOnlineUrl) {
+                    window.open(product.buyOnlineUrl, "_blank");
+                  }
+                }}
+                className="bg-primary-color text-primary-on justify-center hover:bg-primary-dark"
+                hasIcon
+              >
                 <ShoppingBag className="h-4 w-4" />
                 Acheter en ligne
               </FilledButton>
@@ -413,7 +419,6 @@ export default function ProductDetailPage() {
       <section className="w-full bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="mb-4 flex items-center gap-2">
-            <Truck className="h-5 w-5 text-primary-color" />
             <h2 className="text-xl font-black text-primary-dark">À découvrir aussi</h2>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

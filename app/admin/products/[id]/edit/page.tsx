@@ -35,6 +35,7 @@ function buildUpdateData(form: ProductFormData, existingImages: StorageImage[]) 
     brand: form.brand,
     shortDescription: form.shortDescription,
     description: form.description,
+    buyOnlineUrl: form.buyOnlineUrl || undefined,
     bikeType: form.bikeType as BikeType[],
     variants,
     tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : undefined,

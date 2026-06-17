@@ -30,6 +30,7 @@ export interface Product {
   name: string;
   slug: string; // URL-friendly identifier
   brand: string;
+  buyOnlineUrl?: string; // URL d'achat en ligne (externe)
   shortDescription: string; // Résumé court (pour les cartes produit)
   description: string; // Description longue (markdown ou texte riche)
   bikeType: BikeType[];

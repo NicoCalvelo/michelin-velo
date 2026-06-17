@@ -37,6 +37,7 @@ export interface ProductFormData {
   brand: string;
   status: string;
   shortDescription: string;
+  buyOnlineUrl: string;
   description: string;
   bikeType: BikeType[];
   variants: ProductVariantFormData[];
@@ -88,6 +89,7 @@ function toFormData(product?: Product): ProductFormData {
       description: "",
       bikeType: [],
       variants: [],
+      buyOnlineUrl: "",
       tags: "",
     };
   }
@@ -98,6 +100,7 @@ function toFormData(product?: Product): ProductFormData {
     brand: product.brand,
     status: product.status as string,
     shortDescription: product.shortDescription,
+    buyOnlineUrl: product.buyOnlineUrl ?? "",
     description: product.description,
     bikeType: product.bikeType,
     variants: (product.variants ?? []).map((variant) => ({
@@ -150,9 +153,7 @@ export default function ProductForm({
   const setVariant = (index: number, key: keyof ProductVariantFormData, value: string | number) => {
     setForm((f) => ({
       ...f,
-      variants: f.variants.map((variant, i) =>
-        i === index ? { ...variant, [key]: value.toString() } : variant,
-      ),
+      variants: f.variants.map((variant, i) => (i === index ? { ...variant, [key]: value.toString() } : variant)),
     }));
     setVariantError(null);
   };
@@ -231,6 +232,13 @@ export default function ProductForm({
                 }}
                 id="slug"
                 supportingText="Auto-généré depuis le nom"
+              />
+              <FormInput
+                title="URL d'achat en ligne"
+                value={form.buyOnlineUrl}
+                setValue={set("buyOnlineUrl")}
+                id="buyOnlineUrl"
+                placeholder="https://example.com"
               />
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
