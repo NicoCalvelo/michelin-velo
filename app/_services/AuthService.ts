@@ -6,6 +6,8 @@ import {
   signInWithEmailLink,
   signInWithPopup,
   signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   Auth,
   User,
   UserCredential,
@@ -42,7 +44,9 @@ export function signInWithGoogle(): Promise<User> {
   return new Promise((resolve, reject) => {
     signInWithPopup(auth, provider)
       .then((result: UserCredential) => {
-        const isFirstLogin = result.user.metadata.creationTime === result.user.metadata.lastSignInTime;
+        const isFirstLogin =
+          result.user.metadata.creationTime ===
+          result.user.metadata.lastSignInTime;
         if (isFirstLogin) {
           if (result.user.email !== null && result.user.email !== undefined)
             UserRepository.createUser(result.user.uid, {
@@ -102,7 +106,9 @@ export function signInLink(email: string): Promise<User> {
           if (typeof window !== "undefined") {
             localStorage.removeItem("emailForSignIn");
           }
-          const isFirstLogin = result.user.metadata.creationTime === result.user.metadata.lastSignInTime;
+          const isFirstLogin =
+            result.user.metadata.creationTime ===
+            result.user.metadata.lastSignInTime;
           if (isFirstLogin) {
             if (result.user.email !== null && result.user.email !== undefined)
               UserRepository.createUser(result.user.uid, {
@@ -132,4 +138,45 @@ export function LogOut(): Promise<void> {
 
 export function isUserLoged(): boolean {
   return auth.currentUser !== null && auth.currentUser !== undefined;
+}
+
+export function signInWithPassword(
+  email: string,
+  password: string,
+): Promise<User> {
+  return new Promise((resolve, reject) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((result: UserCredential) => {
+        resolve(result.user);
+      })
+      .catch((error) => {
+        console.error("Email/password sign-in error:", error);
+        reject(error);
+      });
+  });
+}
+
+export function registerWithPassword(
+  email: string,
+  password: string,
+  displayName?: string,
+): Promise<User> {
+  return new Promise((resolve, reject) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async (result: UserCredential) => {
+        await UserRepository.createUser(result.user.uid, {
+          displayName: displayName ?? null,
+          email: result.user.email ?? email,
+          role: "user",
+          photoURL: result.user.photoURL,
+          emailVerified: result.user.emailVerified,
+        });
+
+        resolve(result.user);
+      })
+      .catch((error) => {
+        console.error("Registration error:", error);
+        reject(error);
+      });
+  });
 }

@@ -48,14 +48,6 @@ export default function NavBar() {
     return () => unsub();
   }, []);
 
-  const handleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (e) {
-      console.error("Sign-in error", e);
-    }
-  };
-
   const handleSignOut = async () => {
     try {
       await LogOut();
@@ -170,8 +162,8 @@ export default function NavBar() {
                 </>
               ) : (
                 <>
-                  <DropdownItem onClick={handleSignIn}>
-                    Se connecter
+                  <DropdownItem onClick={() => router.push("/auth")}>
+                    S'authentifier
                   </DropdownItem>
                 </>
               )}
