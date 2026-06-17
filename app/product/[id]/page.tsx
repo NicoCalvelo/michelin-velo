@@ -4,7 +4,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowDownToLine, ArrowLeft, CheckCircle2, ShoppingBag, ShieldCheck, Truck } from "lucide-react";
+import {
+  ArrowDownToLine,
+  ArrowLeft,
+  CheckCircle2,
+  ShoppingBag,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 import ExperienceRenderer from "@/app/_components/experience/ExperienceRenderer";
 import { ExperienceDocument } from "@/app/_models/experience";
 import { Product } from "@/app/_models/product";
@@ -56,7 +63,10 @@ export default function ProductDetailPage() {
 
     async function loadProduct() {
       try {
-        const [{ default: ProductRepository }, { default: ExperienceRepository }] = await Promise.all([
+        const [
+          { default: ProductRepository },
+          { default: ExperienceRepository },
+        ] = await Promise.all([
           import("@/app/_repositories/product_repository"),
           import("@/app/_repositories/experience_repository"),
         ]);
@@ -159,7 +169,9 @@ export default function ProductDetailPage() {
       <button
         type="button"
         onClick={() =>
-          document.getElementById(detailsSectionId)?.scrollIntoView({ behavior: "smooth", block: "start" })
+          document
+            .getElementById(detailsSectionId)
+            ?.scrollIntoView({ behavior: "smooth", block: "start" })
         }
         className="fixed inset-x-4 bottom-4 z-40 inline-flex items-center justify-center gap-2 rounded-full bg-primary-color px-4 py-3 text-sm font-semibold text-primary-on shadow-lg transition hover:bg-primary-dark md:left-auto md:right-6 md:inset-x-auto"
       >
@@ -181,8 +193,12 @@ export default function ProductDetailPage() {
             <p className="text-sm font-bold uppercase text-primary-color">
               {product.brand} · {getPractice(product)}
             </p>
-            <h1 className="text-3xl font-black leading-tight text-primary-dark sm:text-5xl">{product.name}</h1>
-            <p className="text-base leading-7 text-gray-600 sm:text-lg">{product.description}</p>
+            <h1 className="text-3xl font-black leading-tight text-primary-dark sm:text-5xl">
+              {product.name}
+            </h1>
+            <p className="text-base leading-7 text-gray-600 sm:text-lg">
+              {product.description}
+            </p>
             {hasPublishedExperience ? (
               <span className="inline-flex w-fit items-center gap-2 rounded-full bg-success-light px-3 py-1 text-xs font-bold text-success-dark">
                 Expérience immersive disponible
@@ -292,9 +308,16 @@ export default function ProductDetailPage() {
                 ["Usage", getPractice(product)],
                 ["Variantes", `${variants.length}`],
               ].map(([label, value]) => (
-                <div key={label} className="rounded-lg border border-gray-200 bg-gray-50 p-3">
-                  <p className="text-xs font-bold uppercase text-gray-500">{label}</p>
-                  <p className="mt-1 font-semibold text-primary-dark">{value}</p>
+                <div
+                  key={label}
+                  className="rounded-lg border border-gray-200 bg-gray-50 p-3"
+                >
+                  <p className="text-xs font-bold uppercase text-gray-500">
+                    {label}
+                  </p>
+                  <p className="mt-1 font-semibold text-primary-dark">
+                    {value}
+                  </p>
                 </div>
               ))}
             </div>
@@ -304,12 +327,20 @@ export default function ProductDetailPage() {
             <h2 className="text-xl font-black text-primary-dark">Détails techniques</h2>
             <dl className="mt-4 divide-y divide-gray-100 text-sm">
               {[
-                ["Dimensions", availableSizes.length ? availableSizes.join(" • ") : "À confirmer"],
+                [
+                  "Dimensions",
+                  availableSizes.length
+                    ? availableSizes.join(" • ")
+                    : "À confirmer",
+                ],
                 ["Poids", minWeight != null ? `${minWeight} g` : "À confirmer"],
                 ["Pression", pressureRange ?? "À confirmer"],
                 ["Usage", getPractice(product)],
               ].map(([label, value]) => (
-                <div key={label} className="grid grid-cols-[120px_1fr] gap-4 py-3">
+                <div
+                  key={label}
+                  className="grid grid-cols-[120px_1fr] gap-4 py-3"
+                >
                   <dt className="font-semibold text-gray-500">{label}</dt>
                   <dd className="font-semibold text-primary-dark">{value}</dd>
                 </div>
@@ -321,14 +352,21 @@ export default function ProductDetailPage() {
 
       <section className="mx-auto grid max-w-7xl gap-6 px-4 pb-10 sm:px-6 lg:grid-cols-[1fr_1fr] lg:px-8">
         <div className="rounded-lg border border-gray-200 bg-white p-5 sm:p-6">
-          <h2 className="text-xl font-black text-primary-dark">Ce que vous gagnez</h2>
+          <h2 className="text-xl font-black text-primary-dark">
+            Ce que vous gagnez
+          </h2>
           <div className="mt-4 grid gap-3">
-            {(product.tags ?? ["Performance", "Confiance", "Durabilité"]).slice(0, 4).map((tag) => (
-              <p key={tag} className="flex items-start gap-3 text-sm leading-6 text-gray-600">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success-color" />
-                <span>{tag}</span>
-              </p>
-            ))}
+            {(product.tags ?? ["Performance", "Confiance", "Durabilité"])
+              .slice(0, 4)
+              .map((tag) => (
+                <p
+                  key={tag}
+                  className="flex items-start gap-3 text-sm leading-6 text-gray-600"
+                >
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success-color" />
+                  <span>{tag}</span>
+                </p>
+              ))}
           </div>
         </div>
 
@@ -364,7 +402,9 @@ export default function ProductDetailPage() {
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         <div className="mb-4 flex items-center gap-2">
           <Truck className="h-5 w-5 text-primary-color" />
-          <h2 className="text-xl font-black text-primary-dark">À découvrir aussi</h2>
+          <h2 className="text-xl font-black text-primary-dark">
+            À découvrir aussi
+          </h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {relatedProducts.map((item) => (

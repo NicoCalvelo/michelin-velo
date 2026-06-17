@@ -2,6 +2,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { Bike, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 
 const tireCategories = [
   { title: "VTT", image: "/demo.jpg" },
@@ -109,9 +110,12 @@ export default function TireSection() {
 
                       <div className="tire-card__line" />
 
-                      <a href="#" className="tire-card__link text-white">
+                      <Link
+                        href="/product#catalogue"
+                        className="tire-card__link text-white"
+                      >
                         En savoir plus
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>

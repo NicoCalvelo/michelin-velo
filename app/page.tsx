@@ -48,7 +48,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center gap-12 md:flex-row md:justify-between">
               <div className="max-w-xl text-center md:text-left">
                 <span className="mb-4 inline-block rounded-full bg-[var(--yellow-ref)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--yellow-ref)]">
-                  Quiz pneus
+                  Quiz
                 </span>
 
                 <h2 className="typo-h1 mb-4">
@@ -320,42 +320,7 @@ export default function Home() {
                 <div className="mx-auto mb-3 h-2 w-24 rounded-full bg-black/10" />
 
                 {/* screen */}
-                <div className="space-y-3 rounded-[2rem] bg-[var(--midnight-blue)] p-4 text-white">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold opacity-70">
-                      Michelin Bicycle
-                    </span>
-                    <span className="text-xs text-[var(--yellow-ref)]">
-                      LIVE
-                    </span>
-                  </div>
-
-                  {/* fake stories */}
-                  <div className="space-y-3">
-                    <div className="h-24 rounded-xl bg-white/10 p-3">
-                      <p className="text-xs font-semibold">
-                        Test terrain — Paris Roubaix
-                      </p>
-                      <p className="mt-1 text-xs opacity-70">
-                        Pneus testés en conditions extrêmes
-                      </p>
-                    </div>
-
-                    <div className="h-24 rounded-xl bg-white/10 p-3">
-                      <p className="text-xs font-semibold">Concours du mois</p>
-                      <p className="mt-1 text-xs opacity-70">
-                        Gagnez un pack pneus gravel
-                      </p>
-                    </div>
-
-                    <div className="h-24 rounded-xl bg-white/10 p-3">
-                      <p className="text-xs font-semibold">Ambassadeurs</p>
-                      <p className="mt-1 text-xs opacity-70">
-                        Romain Bardet en entraînement
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <div className="space-y-3 rounded-[2rem] bg-[var(--midnight-blue)] p-4 text-white min-h-[500px]"></div>
               </div>
             </div>
           </div>

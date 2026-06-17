@@ -2,7 +2,14 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Award, Filter, Leaf, RotateCcw, ShieldCheck, ShoppingBag } from "lucide-react";
+import {
+  Award,
+  Filter,
+  Leaf,
+  RotateCcw,
+  ShieldCheck,
+  ShoppingBag,
+} from "lucide-react";
 import { Product } from "@/app/_models/product";
 import SearchBar from "@/app/_components/ui/Components/SearchBar";
 import Spinner from "@/app/_components/ui/Components/Spinner";
@@ -36,24 +43,6 @@ const PRACTICE_HIGHLIGHTS = [
   },
 ];
 
-const BRAND_PROOFS = [
-  {
-    icon: Award,
-    title: "Performance validée",
-    text: "Des gammes pensées du Racing Line au Performance Line pour adapter le niveau d'exigence à votre pratique.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Confiance en mouvement",
-    text: "Grip, protection et durabilité sont mis en avant pour vous aider à choisir sans hésiter.",
-  },
-  {
-    icon: Leaf,
-    title: "Mobilité durable",
-    text: "Michelin vise des pneus 100% durables à horizon 2050, avec une démarche d'innovation continue.",
-  },
-];
-
 function hasFirebaseConfig() {
   return Boolean(
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
@@ -78,7 +67,8 @@ export default function ProductsPage() {
       }
 
       try {
-        const { default: ProductRepository } = await import("@/app/_repositories/product_repository");
+        const { default: ProductRepository } =
+          await import("@/app/_repositories/product_repository");
         const data = await ProductRepository.getActiveProducts(100);
 
         if (!mounted) return;
@@ -104,7 +94,8 @@ export default function ProductsPage() {
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     return products.filter((product) => {
-      const matchesFilter = activeFilter === "all" || product.bikeType.includes(activeFilter);
+      const matchesFilter =
+        activeFilter === "all" || product.bikeType.includes(activeFilter);
       const searchable = [
         product.name,
         product.brand,
@@ -129,7 +120,9 @@ export default function ProductsPage() {
                 Trouvez le pneu qui suit votre rythme.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-primary-light sm:text-lg">
-                Vous roulez pour gagner du temps, garder le contrôle ou partir plus loin. Choisissez selon votre pratique, comparez les bénéfices, puis passez à l&apos;achat en ligne sans détour.
+                Vous roulez pour gagner du temps, garder le contrôle ou partir
+                plus loin. Choisissez selon votre pratique, comparez les
+                bénéfices, puis passez à l&apos;achat en ligne sans détour.
               </p>
             </div>
 
@@ -151,101 +144,102 @@ export default function ProductsPage() {
             </div>
           </div>
 
-            <div className="grid content-center gap-3 rounded-lg border border-white/15 bg-white/10 p-4 shadow-light">
-              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                {PRACTICE_HIGHLIGHTS.map((item) => (
-                  <div key={item.label} className="rounded-lg bg-white p-4 text-primary-dark">
-                    <p className="text-xs font-bold uppercase text-primary-color">{item.label}</p>
-                    <p className="mt-2 text-lg font-black">{item.value}</p>
-                    <p className="mt-2 text-xs leading-5 text-gray-600">{item.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-      <section id="catalogue" className="mx-auto max-w-7xl scroll-mt-24 px-4 pt-8 sm:px-6 lg:px-8">
-        <div className="mb-8 grid gap-4 md:grid-cols-3">
-          {BRAND_PROOFS.map((proof) => {
-            const Icon = proof.icon;
-
-              return (
-                <article key={proof.title} className="rounded-lg border border-gray-200 bg-white p-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary-color">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h2 className="mt-3 text-base font-black text-primary-dark">{proof.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-gray-600">{proof.text}</p>
-                </article>
-              );
-            })}
-          </div>
-
-          <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-sm font-bold uppercase text-primary-color">
-                {products ? "Catalogue" : "Aperçu avec produit de démonstration"}
-              </p>
-              <h2 className="mt-1 text-2xl font-black text-primary-dark">Produits recommandés</h2>
-            </div>
-
-            <SearchBar
-              className="max-w-full bg-white lg:max-w-md"
-              onChange={setQuery}
-              placeholder="Rechercher un pneu, une pratique..."
-              small
-            />
-          </div>
-
-          <div className="mb-6 flex flex-wrap items-center gap-2">
-            {FILTERS.map((filter) => (
-              <button
-                key={filter.value}
-                type="button"
-                onClick={() => setActiveFilter(filter.value)}
-                className={`rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${
-                  activeFilter === filter.value
-                    ? "border-primary-color bg-primary-color text-primary-on"
-                    : "border-gray-200 bg-white text-primary-color hover:border-primary-color"
-                }`}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-
-          {loading && (
-            <div className="flex justify-center py-16">
-              <Spinner className="h-8 w-8" />
-            </div>
-          )}
-
-          {!loading && filteredProducts.length === 0 && (
-            <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-              <p className="font-bold text-primary-dark">Aucun produit ne correspond à votre recherche.</p>
-              <button
-                type="button"
-                onClick={() => {
-                  setQuery("");
-                  setActiveFilter("all");
-                }}
-                className="mx-auto mt-4 inline-flex items-center gap-2 rounded-lg border border-primary-color px-4 py-2 text-sm font-semibold text-primary-color"
-              >
-                <RotateCcw className="h-4 w-4" />
-                Réinitialiser
-              </button>
-            </div>
-          )}
-
-          {!loading && filteredProducts.length > 0 && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredProducts.map((product) => (
-                <PublicProductCard key={product.id ?? product.slug} product={product} />
+          <div className="grid content-center gap-3 rounded-lg border border-white/15 bg-white/10 p-4 shadow-light">
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              {PRACTICE_HIGHLIGHTS.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-lg bg-white p-4 text-primary-dark"
+                >
+                  <p className="text-xs font-bold uppercase text-primary-color">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 text-lg font-black">{item.value}</p>
+                  <p className="mt-2 text-xs leading-5 text-gray-600">
+                    {item.description}
+                  </p>
+                </div>
               ))}
             </div>
-          )}
-        </section>
-      </main>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="catalogue"
+        className="mx-auto max-w-7xl scroll-mt-24 px-4 pt-8 sm:px-6 lg:px-8"
+      >
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-sm font-bold uppercase text-primary-color">
+              {products ? "Catalogue" : "Aperçu avec produit de démonstration"}
+            </p>
+            <h2 className="mt-1 text-2xl font-black text-primary-dark">
+              Produits recommandés
+            </h2>
+          </div>
+
+          <SearchBar
+            className="max-w-full bg-white lg:max-w-md"
+            onChange={setQuery}
+            placeholder="Rechercher un pneu, une pratique..."
+            small
+          />
+        </div>
+
+        <div className="mb-6 flex flex-wrap items-center gap-2">
+          {FILTERS.map((filter) => (
+            <button
+              key={filter.value}
+              type="button"
+              onClick={() => setActiveFilter(filter.value)}
+              className={`rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${
+                activeFilter === filter.value
+                  ? "border-primary-color bg-primary-color text-primary-on"
+                  : "border-gray-200 bg-white text-primary-color hover:border-primary-color"
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
+        {loading && (
+          <div className="flex justify-center py-16">
+            <Spinner className="h-8 w-8" />
+          </div>
+        )}
+
+        {!loading && filteredProducts.length === 0 && (
+          <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
+            <p className="font-bold text-primary-dark">
+              Aucun produit ne correspond à votre recherche.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setActiveFilter("all");
+              }}
+              className="mx-auto mt-4 inline-flex items-center gap-2 rounded-lg border border-primary-color px-4 py-2 text-sm font-semibold text-primary-color"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Réinitialiser
+            </button>
+          </div>
+        )}
+
+        {!loading && filteredProducts.length > 0 && (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredProducts.map((product) => (
+              <PublicProductCard
+                key={product.id ?? product.slug}
+                product={product}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    </main>
   );
 }
