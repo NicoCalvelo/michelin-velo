@@ -22,7 +22,6 @@ export interface ProductVariant {
   bead?: string; // ex: "Foldable Bead"
   sidewallColor?: string; // ex: "BLACK"
   price: number; // Prix en centimes (ex: 2999 = 29,99€)
-  stock: number;
 }
 
 export interface Product {
@@ -35,7 +34,7 @@ export interface Product {
   description: string; // Description longue (markdown ou texte riche)
   bikeType: BikeType[];
   variants: ProductVariant[];
-  status: keyof typeof PRODUCT_STATUS; // "active", "archived", "out_of_stock"
+  status: keyof typeof PRODUCT_STATUS; // "active", "archived"
   images: StorageImage[]; // images[0] = image principale
   tags?: string[];
   createdAt: Timestamp;

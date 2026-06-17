@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, CircleArrowOutDownLeft, CircleCheckBig, Save } from "lucide-react";
 import Spinner from "@/app/_components/ui/Components/Spinner";
 import FilledButton from "@/app/_components/ui/Buttons/FilledButton";
 import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
@@ -156,13 +156,28 @@ export default function EditExperiencePage() {
             <Save className="w-4 h-4" />
             {saving ? "Enregistrement..." : "Enregistrer"}
           </FilledButton>
-          <FilledButton
-            type="button"
-            onClick={togglePublication}
-            disabled={saving || (!experience.isPublished && !canPublish)}
-          >
-            {experience.isPublished ? "Dépublier" : "Publier"}
-          </FilledButton>
+          {experience.isPublished == false && (
+            <FilledButton
+              type="button"
+              hasIcon
+              onClick={togglePublication}
+              disabled={saving || (!experience.isPublished && !canPublish)}
+            >
+              <CircleCheckBig className="w-4 h-4" />
+              <span>Publier</span>
+            </FilledButton>
+          )}
+          {experience.isPublished && (
+            <OutlinedButton
+              type="button"
+              hasIcon
+              onClick={togglePublication}
+              disabled={saving || (!experience.isPublished && !canPublish)}
+            >
+              <CircleArrowOutDownLeft className="w-4 h-4" />
+              <span>Dépublier</span>
+            </OutlinedButton>
+          )}
         </div>
       </div>
 

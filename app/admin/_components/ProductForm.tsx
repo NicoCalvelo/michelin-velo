@@ -57,7 +57,6 @@ export interface ProductVariantFormData {
   bead: string;
   sidewallColor: string;
   priceEuros: string;
-  stock: string;
 }
 
 function createEmptyVariant(): ProductVariantFormData {
@@ -75,7 +74,6 @@ function createEmptyVariant(): ProductVariantFormData {
     bead: "",
     sidewallColor: "",
     priceEuros: "",
-    stock: "0",
   };
 }
 
@@ -118,7 +116,6 @@ function toFormData(product?: Product): ProductFormData {
       bead: variant.bead ?? "",
       sidewallColor: variant.sidewallColor ?? "",
       priceEuros: (variant.price / 100).toFixed(2),
-      stock: String(variant.stock),
     })),
     tags: (product.tags ?? []).join(", "),
   };
@@ -198,10 +195,10 @@ export default function ProductForm({
     }
 
     const hasMissingRequiredVariantField = form.variants.some(
-      (variant) => !variant.title.trim() || !variant.priceEuros.toString().trim() || !variant.stock.toString().trim(),
+      (variant) => !variant.title.trim() || !variant.priceEuros.toString().trim(),
     );
     if (hasMissingRequiredVariantField) {
-      setVariantError("Chaque déclinaison doit avoir un titre, un prix et un stock.");
+      setVariantError("Chaque déclinaison doit avoir un titre et un prix.");
       return;
     }
 
@@ -443,14 +440,6 @@ export default function ProductForm({
                       id={`variant-price-${index}`}
                       required
                       placeholder="29.99"
-                    />
-                    <FormInput
-                      title="Stock"
-                      value={variant.stock}
-                      setValue={(value) => setVariant(index, "stock", value)}
-                      type="number"
-                      id={`variant-stock-${index}`}
-                      required
                     />
                   </div>
                 </OutlinedCard>

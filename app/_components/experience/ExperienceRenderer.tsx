@@ -8,6 +8,7 @@ import {
   HeroVideoBlock,
   TelemetryDashboardBlock,
 } from "@/app/_models/experience";
+import { Row } from "../ui/Layout/Rows";
 
 interface ExperienceRendererProps {
   blocks: ExperienceBlock[];
@@ -59,7 +60,7 @@ function getEmbeddableVideoUrl(videoUrl: string): string {
 function blockWrapper(editable: boolean): string {
   return editable
     ? "rounded-xl border-2 border-dashed border-primary-color/40 bg-white p-5"
-    : "rounded-xl border border-gray-200 bg-white p-5";
+    : "rounded-xl rounded-tr-3xl md:rounded-tr-[4rem] border border-gray-200 bg-white p-6";
 }
 
 function HeroVideoView({ block, editable }: { block: HeroVideoBlock; editable: boolean }) {
@@ -71,7 +72,7 @@ function HeroVideoView({ block, editable }: { block: HeroVideoBlock; editable: b
         <h3 className="text-xl font-bold text-gray-900">{block.headline}</h3>
         {block.subheadline && <p className="text-gray-600">{block.subheadline}</p>}
       </div>
-      <div className="mt-4 aspect-video w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+      <div className="mt-4 aspect-video w-full relative overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
         {embedUrl ? (
           <iframe
             src={embedUrl}
@@ -84,11 +85,6 @@ function HeroVideoView({ block, editable }: { block: HeroVideoBlock; editable: b
           <div className="flex h-full items-center justify-center text-sm text-gray-500">Aucune vidéo configurée</div>
         )}
       </div>
-      {block.ctaText && (
-        <button type="button" className="mt-4 rounded-lg bg-primary-color px-4 py-2 text-sm font-semibold text-primary-on">
-          {block.ctaText}
-        </button>
-      )}
     </section>
   );
 }
@@ -100,7 +96,9 @@ function ExpertQuoteView({ block, editable }: { block: ExpertQuoteBlock; editabl
         {block.avatarUrl ? (
           <img src={block.avatarUrl} alt={block.pilotName} className="h-14 w-14 rounded-full object-cover" />
         ) : (
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500">Avatar</div>
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500">
+            Avatar
+          </div>
         )}
         <div>
           <p className="text-sm text-gray-500">{block.circuitName}</p>
@@ -116,25 +114,39 @@ function ExpertQuoteView({ block, editable }: { block: ExpertQuoteBlock; editabl
 function TelemetryDashboardView({ block, editable }: { block: TelemetryDashboardBlock; editable: boolean }) {
   return (
     <section className={blockWrapper(editable)}>
-      <h3 className="text-lg font-bold text-gray-900">Dashboard de télémétrie</h3>
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1.3fr_1fr]">
-        <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+      <div className="flex flex-col mt-4">
+        <div className="overflow-hidden rounded-lg bg-gray-100">
           {block.trackMapImage ? (
             <img src={block.trackMapImage} alt="Carte circuit" className="h-full w-full object-cover" />
           ) : (
-            <div className="flex min-h-44 items-center justify-center text-sm text-gray-500">Image du tracé non définie</div>
+            <div className="flex min-h-44 items-center justify-center text-sm text-gray-500">
+              Image du tracé non définie
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="space-y-2">
+          <p className="text-3xl! mb-8! italic font-extralight! leading-9 text-slate-900">"{block.technicalFeedback}"</p>
           {block.metrics.map((metric, index) => (
-            <div key={`${metric.label}-${index}`} className="rounded-lg border border-gray-200 bg-white px-3 py-2">
-              <p className="text-xs font-semibold uppercase text-gray-500">{metric.label}</p>
-              <p className="text-base font-bold text-gray-900">{metric.value}</p>
+            <div
+              key={`${metric.label}-${index}`}
+              className="rounded-lg h-fit border border-gray-200 bg-white px-3 py-2"
+            >
+              <Row className="gap-2">
+                {metric.icon && (
+                  <div
+                    className="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 p-1.5"
+                    dangerouslySetInnerHTML={{ __html: metric.icon }}
+                  ></div>
+                )}
+                <div>
+                  <p className="text-xs! font-semibold uppercase text-gray-500">{metric.label}</p>
+                  <p className="text-base! font-bold text-gray-900">{metric.value}</p>
+                </div>
+              </Row>
             </div>
           ))}
         </div>
       </div>
-      <p className="mt-4 text-sm leading-6 text-gray-700">{block.technicalFeedback}</p>
     </section>
   );
 }
@@ -145,7 +157,9 @@ function ChapterContentView({ block, editable }: { block: ChapterContentBlock; e
       {block.imageUrl ? (
         <img src={block.imageUrl} alt={block.title} className="h-full w-full object-cover" />
       ) : (
-        <div className="flex min-h-52 items-center justify-center text-sm text-gray-500">Image du chapitre non définie</div>
+        <div className="flex min-h-52 items-center justify-center text-sm text-gray-500">
+          Image du chapitre non définie
+        </div>
       )}
     </div>
   );
@@ -173,14 +187,16 @@ function CircuitOverviewView({ block, editable }: { block: CircuitOverviewBlock;
           {block.mapImageUrl ? (
             <img src={block.mapImageUrl} alt={block.circuitTitle} className="h-full w-full object-cover" />
           ) : (
-            <div className="flex min-h-52 items-center justify-center text-sm text-gray-500">Carte du circuit non définie</div>
+            <div className="flex min-h-52 items-center justify-center text-sm text-gray-500">
+              Carte du circuit non définie
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid grid-cols-2 gap-2 h-fit">
           {block.stats.map((stat, index) => (
-            <div key={`${stat.label}-${index}`} className="rounded-lg border border-gray-200 bg-white px-3 py-2">
-              <p className="text-xs font-semibold uppercase text-gray-500">{stat.label}</p>
-              <p className="text-base font-bold text-gray-900">{stat.value}</p>
+            <div key={`${stat.label}-${index}`} className="rounded-lg border h-fit border-gray-200 bg-white px-3 py-2">
+              <p className="text-xs! font-semibold uppercase text-gray-500">{stat.label}</p>
+              <p className="text-base! font-bold text-gray-900">{stat.value}</p>
             </div>
           ))}
         </div>
@@ -218,9 +234,20 @@ export default function ExperienceRenderer({ blocks, editable = false, className
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`grid grid-cols-5 gap-4 ${className}`}>
       {sorted.map((block) => (
-        <div key={block.id}>
+        <div
+          key={block.id}
+          className={
+            block.type === BlockType.HERO_VIDEO
+              ? "col-span-3 row-span-2"
+              : block.type === BlockType.TELEMETRY_DASHBOARD
+                ? "col-span-2 row-span-3"
+                : block.type === BlockType.CIRCUIT_OVERVIEW
+                  ? "col-span-3 row-span-1"
+                  : "col-span-2 row-span-1"
+          }
+        >
           {editable && (
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-primary-color">
               {block.type.replaceAll("_", " ")}

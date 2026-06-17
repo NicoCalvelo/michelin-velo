@@ -11,7 +11,6 @@ import IconButton from "@/app/_components/ui/Buttons/IconButton";
 const STATUS_COLORS: Record<string, string> = {
   active: "bg-green-100 text-green-800",
   archived: "bg-gray-100 text-gray-600",
-  out_of_stock: "bg-red-100 text-red-700",
 };
 
 interface ProductCardProps {
@@ -25,7 +24,6 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
   const prices = product.variants.map((variant) => variant.price);
   const minPrice = prices.length ? Math.min(...prices) : null;
   const maxPrice = prices.length ? Math.max(...prices) : null;
-  const totalStock = product.variants.reduce((sum, variant) => sum + variant.stock, 0);
 
   const priceLabel =
     minPrice === null
@@ -60,7 +58,6 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
         <div className="flex items-baseline gap-2 mt-auto pt-2">
           <span className="font-bold text-gray-900">{priceLabel}</span>
         </div>
-        <p className="text-xs text-gray-500">Stock total : {totalStock}</p>
       </div>
 
       {/* Actions */}

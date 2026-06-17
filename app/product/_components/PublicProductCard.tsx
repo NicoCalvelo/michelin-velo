@@ -75,7 +75,7 @@ export default function PublicProductCard({ product }: PublicProductCardProps) {
 
           <div className="flex items-end justify-between gap-3 border-t border-gray-100 pt-3">
             <div>
-              <p className="text-xs text-gray-500">À partir de</p>
+              <p className="text-xs! text-gray-500">Prix conseillé</p>
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-black text-primary-color">{getProductPriceRange(product)}</span>
               </div>
@@ -85,11 +85,6 @@ export default function PublicProductCard({ product }: PublicProductCardProps) {
               <ArrowRight className="h-5 w-5" />
             </span>
           </div>
-
-          <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-success-dark">
-            <ShieldCheck className="h-4 w-4" />
-            {totalStock > 0 ? `${totalStock} en stock pour achat e-retail` : "Stock à confirmer"}
-          </p>
         </div>
       </Link>
     </OutlinedCard>

@@ -1,5 +1,4 @@
 {
   "active" : { "value": "active",       "label": "Actif",         "color": "green"  },
-  "archived" : { "value": "archived",     "label": "Archivé",       "color": "gray"   },
-  "out_of_stock" : { "value": "out_of_stock", "label": "Rupture de stock", "color": "red"  }
+  "archived" : { "value": "archived",     "label": "Archivé",       "color": "gray"   }
 }

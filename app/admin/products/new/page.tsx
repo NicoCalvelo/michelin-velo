@@ -26,15 +26,12 @@ function buildCreateData(form: ProductFormData) {
     bead: variant.bead || undefined,
     sidewallColor: variant.sidewallColor || undefined,
     price: Math.round(Number(variant.priceEuros) * 100),
-    stock: Number(variant.stock),
   }));
-  const totalStock = variants.reduce((sum, variant) => sum + variant.stock, 0);
 
   return {
     name: form.name,
     slug: form.slug,
     brand: form.brand,
-    status: totalStock === 0 ? "out_of_stock" : (form.status as "active" | "archived" | "out_of_stock"),
     shortDescription: form.shortDescription,
     description: form.description,
     bikeType: form.bikeType as BikeType[],

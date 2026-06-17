@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowDown, ArrowUp, Copy, Plus, Trash2, Upload } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, Eye, PencilLineIcon, Plus, Trash2, Upload } from "lucide-react";
 import {
   BlockType,
   ChapterContentBlock,
@@ -37,7 +37,6 @@ function createBlock(type: BlockType, order: number): ExperienceBlock {
         videoUrl: "",
         headline: "",
         subheadline: "",
-        ctaText: "",
       };
     case BlockType.EXPERT_QUOTE:
       return {
@@ -54,7 +53,7 @@ function createBlock(type: BlockType, order: number): ExperienceBlock {
         ...base,
         type: BlockType.TELEMETRY_DASHBOARD,
         trackMapImage: "",
-        metrics: [{ label: "", value: "", iconName: "" }],
+        metrics: [{ label: "", value: "", icon: "" }],
         technicalFeedback: "",
       };
     case BlockType.CHAPTER_CONTENT:
@@ -81,7 +80,6 @@ function createBlock(type: BlockType, order: number): ExperienceBlock {
         videoUrl: "",
         headline: "",
         subheadline: "",
-        ctaText: "",
       };
   }
 }
@@ -142,14 +140,6 @@ export default function ExperienceBlocksEditor({
     onChange(normalizeOrders(next));
   };
 
-  const changeBlockType = (index: number, type: BlockType) => {
-    const previous = blocks[index];
-    const next = [...blocks];
-    next[index] = createBlock(type, previous.order);
-    next[index].id = previous.id;
-    onChange(normalizeOrders(next));
-  };
-
   const addBlock = (type: BlockType) => {
     onChange([...blocks, createBlock(type, blocks.length)]);
   };
@@ -183,23 +173,16 @@ export default function ExperienceBlocksEditor({
               transform: isPreview(block.id) ? "rotateY(180deg)" : "rotateY(0deg)",
             }}
           >
-            <div className={"backface-hidden " + (isPreview(block.id) ? "absolute" : "")} style={{ backfaceVisibility: "hidden" }} aria-hidden={isPreview(block.id)}>
+            <div
+              className={"backface-hidden " + (isPreview(block.id) ? "absolute" : "")}
+              style={{ backfaceVisibility: "hidden" }}
+              aria-hidden={isPreview(block.id)}
+            >
               <OutlinedCard className="p-4 space-y-4 h-fit!">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-gray-700">Bloc #{index + 1}</p>
-                    <select
-                      value={block.type}
-                      onChange={(e) => changeBlockType(index, e.target.value as BlockType)}
-                      disabled={disabled}
-                      className="rounded-lg border border-gray-300 px-2 py-1 text-sm"
-                    >
-                      {Object.values(BlockType).map((type) => (
-                        <option key={type} value={type}>
-                          {type}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="">
+                    <span className="text-xs! font-semibold text-primary-color">{block.type.replaceAll("_", " ")}</span>
+                    <p className="text-base! font-semibold text-gray-800">Bloc #{index + 1}</p>
                   </div>
 
                   <div className="flex flex-wrap gap-2">
@@ -209,6 +192,7 @@ export default function ExperienceBlocksEditor({
                       onClick={() => togglePreview(block.id)}
                       className="p-2! pl-2.5 pr-3.5! gap-1! text-xs!"
                     >
+                      {isPreview(block.id) ? <PencilLineIcon className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       {isPreview(block.id) ? "Edit" : "Preview"}
                     </OutlinedButton>
                     <OutlinedButton
@@ -285,26 +269,25 @@ export default function ExperienceBlocksEditor({
               style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
               aria-hidden={!isPreview(block.id)}
             >
-              <OutlinedCard className="p-4 space-y-4 h-fit!">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-gray-700">Bloc #{index + 1}</p>
-                    <span className="rounded-full bg-primary-color/10 px-2 py-1 text-xs font-semibold text-primary-color">
-                      Preview
-                    </span>
-                  </div>
-                  <OutlinedButton
-                    type="button"
-                    disabled={disabled}
-                    onClick={() => togglePreview(block.id)}
-                    className="p-2! pl-2.5 pr-3.5! gap-1! text-xs!"
-                  >
-                    Revenir en édition
-                  </OutlinedButton>
+              <div className="flex flex-col gap-3 mb-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold text-gray-700">Bloc #{index + 1}</p>
+                  <span className="rounded-full bg-primary-color/10 px-2 py-1 text-xs font-semibold text-primary-color">
+                    Preview
+                  </span>
                 </div>
+                <OutlinedButton
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => togglePreview(block.id)}
+                  className="p-2! pl-2.5 pr-3.5! gap-1! text-xs!"
+                >
+                  <PencilLineIcon className="w-4 h-4" />
+                  <span>Revenir en édition</span>
+                </OutlinedButton>
+              </div>
 
-                <ExperienceRenderer blocks={[block]} />
-              </OutlinedCard>
+              <ExperienceRenderer blocks={[block]} />
             </div>
           </div>
         </div>
@@ -355,16 +338,9 @@ function HeroVideoEditor({
       />
       <FormInput
         title="URL vidéo"
-        className="w-full"
+        className="w-full col-span-2"
         value={block.videoUrl}
         setValue={(v) => onChange({ ...block, videoUrl: String(v) })}
-        disabled={disabled}
-      />
-      <FormInput
-        title="Texte CTA"
-        className="w-full"
-        value={block.ctaText ?? ""}
-        setValue={(v) => onChange({ ...block, ctaText: String(v) })}
         disabled={disabled}
       />
     </div>
@@ -437,7 +413,7 @@ function TelemetryEditor({
   onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   disabled: boolean;
 }) {
-  const updateMetric = (metricIndex: number, key: "label" | "value" | "iconName", value: string) => {
+  const updateMetric = (metricIndex: number, key: "label" | "value" | "icon", value: string) => {
     const metrics = block.metrics.map((metric, index) =>
       index === metricIndex ? { ...metric, [key]: value } : metric,
     );
@@ -479,7 +455,7 @@ function TelemetryEditor({
           <FilledButton
             type="button"
             disabled={disabled}
-            onClick={() => onChange({ ...block, metrics: [...block.metrics, { label: "", value: "", iconName: "" }] })}
+            onClick={() => onChange({ ...block, metrics: [...block.metrics, { label: "", value: "", icon: "" }] })}
           >
             <Plus className="w-4 h-4" />
             Ajouter
@@ -505,8 +481,8 @@ function TelemetryEditor({
             />
             <FormInput
               title="Icône (optionnel)"
-              value={metric.iconName ?? ""}
-              setValue={(v) => updateMetric(metricIndex, "iconName", String(v))}
+              value={metric.icon ?? ""}
+              setValue={(v) => updateMetric(metricIndex, "icon", String(v))}
               disabled={disabled}
             />
             <OutlinedButton type="button" disabled={disabled} onClick={() => removeMetric(metricIndex)}>

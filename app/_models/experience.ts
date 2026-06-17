@@ -22,7 +22,6 @@ export interface HeroVideoBlock extends BaseBlock {
   videoUrl: string;
   headline: string;
   subheadline?: string;
-  ctaText?: string;
 }
 
 // Le bloc "Témoignage du pilote"
@@ -42,7 +41,7 @@ export interface TelemetryDashboardBlock extends BaseBlock {
   metrics: {
     label: string; // ex: "Adhérence latérale"
     value: string; // ex: "1.2 G"
-    iconName?: string;
+    icon?: string;
   }[];
   technicalFeedback: string;
 }

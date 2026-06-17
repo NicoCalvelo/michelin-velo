@@ -52,5 +52,19 @@ service firebase.storage {
       // Suppression : admin uniquement
       allow delete: if isAdmin();
     }
+
+    // ── Experience block images /experiences/{experienceId}/blocks/{blockId}/** ─────
+    match /experiences/{experienceId}/blocks/{blockId}/{fileName} {
+      // Lecture publique
+      allow read: if true;
+
+      // Écriture (upload + remplacement) : admin uniquement, image ≤ 10 Mo
+      allow write: if isAdmin()
+                   && isImageFile()
+                   && isFileSizeUnder(10);
+
+      // Suppression : admin uniquement
+      allow delete: if isAdmin();
+    }
   }
 }
