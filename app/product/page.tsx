@@ -14,6 +14,8 @@ import { Product } from "@/app/_models/product";
 import SearchBar from "@/app/_components/ui/Components/SearchBar";
 import Spinner from "@/app/_components/ui/Components/Spinner";
 import PublicProductCard from "./_components/PublicProductCard";
+import FilledButton from "../_components/ui/Buttons/FilledButton";
+import { useRouter } from "next/navigation";
 
 const FILTERS = [
   { value: "all", label: "Tous" },
@@ -52,6 +54,7 @@ function hasFirebaseConfig() {
 }
 
 export default function ProductsPage() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>();
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterValue>("all");
@@ -126,22 +129,9 @@ export default function ProductsPage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="#catalogue"
-                className="btn inline-flex items-center gap-2 bg-secondary-color text-secondary-on hover:bg-secondary-dark"
-              >
-                <ShoppingBag className="h-4 w-4" />
-                Consulter le catalogue
-              </Link>
-              <Link
-                href="/quiz"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/60 bg-transparent px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                <Filter className="h-4 w-4" />
-                Quel pneu pour moi ?
-              </Link>
-            </div>
+            <FilledButton onClick={() => router.push("/quiz")}>
+              Quel pneu pour moi ?
+            </FilledButton>
           </div>
 
           <div className="grid content-center gap-3 rounded-lg border border-white/15 bg-white/10 p-4 shadow-light">

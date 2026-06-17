@@ -3,7 +3,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Bike, CheckCircle2, Gauge, Map, RotateCcw, ShoppingBag, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Bike,
+  CheckCircle2,
+  Gauge,
+  Map,
+  RotateCcw,
+  ShoppingBag,
+  Sparkles,
+} from "lucide-react";
 import FilledButton from "@/app/_components/ui/Buttons/FilledButton";
 import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
 import { Product } from "@/app/_models/product";
@@ -40,7 +50,13 @@ const QUESTIONS: QuizQuestion[] = [
         label: "Route rapide",
         description: "Allure soutenue, longues distances, rendement.",
         profile: "road",
-        keywords: ["route", "performance", "rendement", "vitesse", "competition"],
+        keywords: [
+          "route",
+          "performance",
+          "rendement",
+          "vitesse",
+          "competition",
+        ],
       },
       {
         label: "Gravel aventure",
@@ -157,25 +173,32 @@ const QUESTIONS: QuizQuestion[] = [
   },
 ];
 
-const PROFILE_DETAILS: Record<ProfileKey, { title: string; summary: string; strengths: string[] }> = {
+const PROFILE_DETAILS: Record<
+  ProfileKey,
+  { title: string; summary: string; strengths: string[] }
+> = {
   road: {
     title: "Profil route performance",
-    summary: "Vous cherchez un pneu vif, précis et rassurant pour garder du rythme sur la durée.",
+    summary:
+      "Vous cherchez un pneu vif, précis et rassurant pour garder du rythme sur la durée.",
     strengths: ["Rendement", "Précision", "Tubeless Ready"],
   },
   gravel: {
     title: "Profil gravel aventure",
-    summary: "Vous voulez passer de la route aux chemins avec un pneu polyvalent et stable.",
+    summary:
+      "Vous voulez passer de la route aux chemins avec un pneu polyvalent et stable.",
     strengths: ["Polyvalence", "Contrôle", "Aventure"],
   },
   mountain: {
     title: "Profil VTT contrôle",
-    summary: "Vous privilégiez l'adhérence, la robustesse et la confiance sur terrain technique.",
+    summary:
+      "Vous privilégiez l'adhérence, la robustesse et la confiance sur terrain technique.",
     strengths: ["Grip", "Robustesse", "Terrain engagé"],
   },
   city: {
     title: "Profil urbain sécurité",
-    summary: "Vous recherchez un pneu fiable, lisible et rassurant pour les trajets réguliers.",
+    summary:
+      "Vous recherchez un pneu fiable, lisible et rassurant pour les trajets réguliers.",
     strengths: ["Fiabilité", "Contrôle", "Usage régulier"],
   },
 };
@@ -199,15 +222,15 @@ function normalize(value: string) {
 function hasFirebaseConfig() {
   return Boolean(
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
-      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   );
 }
 
 function getSelectedOptions(answers: Record<string, ProfileKey>) {
-  return QUESTIONS.map((question) => question.options.find((option) => option.profile === answers[question.id])).filter(
-    Boolean,
-  ) as QuizOption[];
+  return QUESTIONS.map((question) =>
+    question.options.find((option) => option.profile === answers[question.id]),
+  ).filter(Boolean) as QuizOption[];
 }
 
 function getProductSearchText(product: Product) {
@@ -229,7 +252,12 @@ function getProductSearchText(product: Product) {
   );
 }
 
-function scoreProduct(product: Product, winner: ProfileKey, selectedOptions: QuizOption[], profileScores: Record<ProfileKey, number>) {
+function scoreProduct(
+  product: Product,
+  winner: ProfileKey,
+  selectedOptions: QuizOption[],
+  profileScores: Record<ProfileKey, number>,
+) {
   let score = 0;
   const productText = getProductSearchText(product);
   const totalStock = getTotalStock(product);
@@ -242,9 +270,11 @@ function scoreProduct(product: Product, winner: ProfileKey, selectedOptions: Qui
     }
   });
 
-  selectedOptions.flatMap((option) => option.keywords).forEach((keyword) => {
-    if (productText.includes(normalize(keyword))) score += 6;
-  });
+  selectedOptions
+    .flatMap((option) => option.keywords)
+    .forEach((keyword) => {
+      if (productText.includes(normalize(keyword))) score += 6;
+    });
 
   if (totalStock > 0) score += 12;
   if (totalStock === 0) score -= 20;
@@ -253,7 +283,9 @@ function scoreProduct(product: Product, winner: ProfileKey, selectedOptions: Qui
 }
 
 function getBikeTypeLabel(product: Product) {
-  return (product.bikeType ?? []).map((type) => BIKE_TYPE_LABELS[type] ?? type).join(" / ");
+  return (product.bikeType ?? [])
+    .map((type) => BIKE_TYPE_LABELS[type] ?? type)
+    .join(" / ");
 }
 
 function getResult(answers: Record<string, ProfileKey>, products: Product[]) {
@@ -268,7 +300,9 @@ function getResult(answers: Record<string, ProfileKey>, products: Product[]) {
     scores[profile] += 1;
   });
 
-  const winner = (Object.entries(scores) as Array<[ProfileKey, number]>).sort((a, b) => b[1] - a[1])[0][0];
+  const winner = (Object.entries(scores) as Array<[ProfileKey, number]>).sort(
+    (a, b) => b[1] - a[1],
+  )[0][0];
   const details = PROFILE_DETAILS[winner];
   const selectedOptions = getSelectedOptions(answers);
   const rankedProducts = products
@@ -277,7 +311,9 @@ function getResult(answers: Record<string, ProfileKey>, products: Product[]) {
       score: scoreProduct(product, winner, selectedOptions, scores),
     }))
     .sort((a, b) => b.score - a.score);
-  const recommendations = rankedProducts.filter((item) => item.score > 0).map((item) => item.product);
+  const recommendations = rankedProducts
+    .filter((item) => item.score > 0)
+    .map((item) => item.product);
   const product = recommendations[0] ?? products[0] ?? null;
 
   return {
@@ -298,15 +334,21 @@ export default function QuizPage() {
   const [usesMockData, setUsesMockData] = useState(true);
   const currentQuestion = QUESTIONS[step];
   const isComplete = Object.keys(answers).length === QUESTIONS.length;
-  const progress = Math.round((Object.keys(answers).length / QUESTIONS.length) * 100);
+  const progress = Math.round(
+    (Object.keys(answers).length / QUESTIONS.length) * 100,
+  );
   const result = useMemo(
     () => (isComplete && showResult ? getResult(answers, products) : null),
     [answers, isComplete, products, showResult],
   );
   const recommendedProduct = result?.product ?? null;
-  const recommendedVariant = recommendedProduct ? getFirstAvailableVariant(recommendedProduct) : null;
+  const recommendedVariant = recommendedProduct
+    ? getFirstAvailableVariant(recommendedProduct)
+    : null;
   const alternativeProducts =
-    result?.recommendations.filter((product) => product.id !== recommendedProduct?.id).slice(0, 2) ?? [];
+    result?.recommendations
+      .filter((product) => product.id !== recommendedProduct?.id)
+      .slice(0, 2) ?? [];
 
   useEffect(() => {
     let mounted = true;
@@ -318,7 +360,8 @@ export default function QuizPage() {
       }
 
       try {
-        const { default: ProductRepository } = await import("@/app/_repositories/product_repository");
+        const { default: ProductRepository } =
+          await import("@/app/_repositories/product_repository");
         const data = await ProductRepository.getActiveProducts(100);
 
         if (!mounted) return;
@@ -369,32 +412,29 @@ export default function QuizPage() {
     <main className="min-h-screen bg-background-dark">
       <section className="bg-primary-dark text-primary-on">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <Link href="/product" className="inline-flex items-center gap-2 text-sm font-semibold text-primary-light hover:text-white">
+          <Link
+            href="/product"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary-light hover:text-white"
+          >
             <ArrowLeft className="h-4 w-4" />
             Retour aux produits
           </Link>
 
-          <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px] lg:items-end">
-            <div className="space-y-4">
-              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-secondary-color px-4 py-2 text-sm font-bold text-secondary-on">
-                <Sparkles className="h-4 w-4" />
-                Sélecteur Michelin Bike
-              </span>
-              <h1 className="max-w-3xl text-4xl font-black leading-tight text-white sm:text-5xl">
-                Quelques réponses. Un pneu plus juste.
-              </h1>
-              <p className="max-w-2xl text-base leading-7 text-primary-light sm:text-lg">
-                Dites-nous comment vous roulez. Nous vous orientons vers le pneu Michelin le plus cohérent avec votre pratique, vos sensations et votre niveau d&apos;exigence.
-              </p>
-            </div>
+          <div className="mt-4 grid items-center gap-8 lg:grid-cols-[1fr_360px]">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-secondary-color px-4 py-2 text-sm font-bold text-secondary-on">
+              Quiz
+            </span>
 
-            <div className="rounded-lg border border-white/15 bg-white/10 p-4">
+            <div className="rounded-lg border border-white/15 bg-white/10 p-4 w-full">
               <div className="flex items-center justify-between text-sm font-semibold">
                 <span>Progression</span>
                 <span>{progress}%</span>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/20">
-                <div className="h-full rounded-full bg-secondary-color transition-all" style={{ width: `${progress}%` }} />
+                <div
+                  className="h-full rounded-full bg-secondary-color transition-all"
+                  style={{ width: `${progress}%` }}
+                />
               </div>
             </div>
           </div>
@@ -408,12 +448,17 @@ export default function QuizPage() {
               <p className="text-sm font-bold uppercase text-primary-color">
                 Question {step + 1} / {QUESTIONS.length}
               </p>
-              <h2 className="mt-2 text-2xl font-black text-primary-dark">{currentQuestion.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-gray-600">{currentQuestion.hint}</p>
+              <h2 className="mt-2 text-2xl font-black text-primary-dark">
+                {currentQuestion.title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-gray-600">
+                {currentQuestion.hint}
+              </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {currentQuestion.options.map((option) => {
-                  const selected = answers[currentQuestion.id] === option.profile;
+                  const selected =
+                    answers[currentQuestion.id] === option.profile;
 
                   return (
                     <button
@@ -428,10 +473,16 @@ export default function QuizPage() {
                     >
                       <span className="flex items-start justify-between gap-3">
                         <span>
-                          <span className="block text-base font-black">{option.label}</span>
-                          <span className="mt-2 block text-sm leading-6 text-gray-600">{option.description}</span>
+                          <span className="block text-base font-black">
+                            {option.label}
+                          </span>
+                          <span className="mt-2 block text-sm leading-6 text-gray-600">
+                            {option.description}
+                          </span>
                         </span>
-                        {selected && <CheckCircle2 className="h-5 w-5 shrink-0 text-primary-color" />}
+                        {selected && (
+                          <CheckCircle2 className="h-5 w-5 shrink-0 text-primary-color" />
+                        )}
                       </span>
                     </button>
                   );
@@ -448,7 +499,10 @@ export default function QuizPage() {
                 </OutlinedButton>
                 <FilledButton
                   className="justify-center"
-                  disabled={!answers[currentQuestion.id] || (step === QUESTIONS.length - 1 && loadingProducts)}
+                  disabled={
+                    !answers[currentQuestion.id] ||
+                    (step === QUESTIONS.length - 1 && loadingProducts)
+                  }
                   onClick={goNext}
                   hasIcon
                 >
@@ -464,17 +518,36 @@ export default function QuizPage() {
 
             <aside className="grid gap-3">
               {[
-                { icon: Bike, title: "Pratique", text: "Route, gravel, VTT ou ville." },
-                { icon: Gauge, title: "Sensation", text: "Vitesse, grip, contrôle ou sécurité." },
-                { icon: Map, title: "Terrain", text: "Un choix adapté à vos sorties réelles." },
+                {
+                  icon: Bike,
+                  title: "Pratique",
+                  text: "Route, gravel, VTT ou ville.",
+                },
+                {
+                  icon: Gauge,
+                  title: "Sensation",
+                  text: "Vitesse, grip, contrôle ou sécurité.",
+                },
+                {
+                  icon: Map,
+                  title: "Terrain",
+                  text: "Un choix adapté à vos sorties réelles.",
+                },
               ].map((item) => {
                 const Icon = item.icon;
 
                 return (
-                  <div key={item.title} className="rounded-lg border border-gray-200 bg-white p-4">
+                  <div
+                    key={item.title}
+                    className="rounded-lg border border-gray-200 bg-white p-4"
+                  >
                     <Icon className="h-5 w-5 text-primary-color" />
-                    <h3 className="mt-3 text-base font-black text-primary-dark">{item.title}</h3>
-                    <p className="mt-1 text-sm leading-6 text-gray-600">{item.text}</p>
+                    <h3 className="mt-3 text-base font-black text-primary-dark">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 text-sm leading-6 text-gray-600">
+                      {item.text}
+                    </p>
                   </div>
                 );
               })}
@@ -485,17 +558,30 @@ export default function QuizPage() {
             <div className="rounded-lg bg-primary-dark p-5 text-primary-on sm:p-6">
               <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-center">
                 <div>
-                  <p className="text-sm font-bold uppercase text-secondary-color">Votre profil</p>
-                  <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl">{result.details.title}</h2>
-                  <p className="mt-3 max-w-3xl text-base leading-7 text-primary-light">{result.details.summary}</p>
+                  <p className="text-sm font-bold uppercase text-secondary-color">
+                    Votre profil
+                  </p>
+                  <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl">
+                    {result.details.title}
+                  </h2>
+                  <p className="mt-3 max-w-3xl text-base leading-7 text-primary-light">
+                    {result.details.summary}
+                  </p>
                 </div>
 
                 <div className="rounded-lg border border-white/15 bg-white/10 p-4">
-                  <p className="text-sm font-semibold text-primary-light">Compatibilité estimée</p>
-                  <p className="mt-1 text-5xl font-black text-secondary-color">{result.score}%</p>
+                  <p className="text-sm font-semibold text-primary-light">
+                    Compatibilité estimée
+                  </p>
+                  <p className="mt-1 text-5xl font-black text-secondary-color">
+                    {result.score}%
+                  </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {result.details.strengths.map((strength) => (
-                      <span key={strength} className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">
+                      <span
+                        key={strength}
+                        className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold"
+                      >
                         {strength}
                       </span>
                     ))}
@@ -506,7 +592,8 @@ export default function QuizPage() {
 
             {usesMockData && (
               <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
-                Catalogue réel indisponible pour le moment : recommandation de démonstration affichée.
+                Catalogue réel indisponible pour le moment : recommandation de
+                démonstration affichée.
               </p>
             )}
 
@@ -517,7 +604,10 @@ export default function QuizPage() {
                     {recommendedProduct.images?.[0] ? (
                       <Image
                         src={recommendedProduct.images[0].url}
-                        alt={recommendedProduct.images[0].altText ?? recommendedProduct.name}
+                        alt={
+                          recommendedProduct.images[0].altText ??
+                          recommendedProduct.name
+                        }
                         fill
                         priority
                         unoptimized
@@ -539,28 +629,41 @@ export default function QuizPage() {
                   <div className="flex flex-col gap-5 p-5 sm:p-6">
                     <div>
                       <p className="text-sm font-bold uppercase text-primary-color">
-                        {recommendedProduct.brand} · {getBikeTypeLabel(recommendedProduct)}
+                        {recommendedProduct.brand} ·{" "}
+                        {getBikeTypeLabel(recommendedProduct)}
                       </p>
                       <h3 className="mt-2 text-2xl font-black leading-tight text-primary-dark">
                         {recommendedProduct.name}
                       </h3>
-                      <p className="mt-3 text-sm leading-6 text-gray-600">{recommendedProduct.shortDescription}</p>
+                      <p className="mt-3 text-sm leading-6 text-gray-600">
+                        {recommendedProduct.shortDescription}
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
                       <div className="rounded-lg bg-background-dark p-3">
-                        <p className="text-xs font-bold uppercase text-gray-500">Prix</p>
-                        <p className="mt-1 text-lg font-black text-primary-color">{getProductPriceRange(recommendedProduct)}</p>
+                        <p className="text-xs font-bold uppercase text-gray-500">
+                          Prix
+                        </p>
+                        <p className="mt-1 text-lg font-black text-primary-color">
+                          {getProductPriceRange(recommendedProduct)}
+                        </p>
                       </div>
                       <div className="rounded-lg bg-background-dark p-3">
-                        <p className="text-xs font-bold uppercase text-gray-500">Stock</p>
+                        <p className="text-xs font-bold uppercase text-gray-500">
+                          Stock
+                        </p>
                         <p className="mt-1 text-lg font-black text-primary-dark">
                           {getTotalStock(recommendedProduct)} disponibles
                         </p>
                       </div>
                       <div className="col-span-2 rounded-lg bg-background-dark p-3">
-                        <p className="text-xs font-bold uppercase text-gray-500">Dimension conseillée</p>
-                        <p className="mt-1 font-black text-primary-dark">{formatDimension(recommendedVariant)}</p>
+                        <p className="text-xs font-bold uppercase text-gray-500">
+                          Dimension conseillée
+                        </p>
+                        <p className="mt-1 font-black text-primary-dark">
+                          {formatDimension(recommendedVariant)}
+                        </p>
                       </div>
                     </div>
 
@@ -587,10 +690,15 @@ export default function QuizPage() {
 
               <aside className="space-y-4">
                 <div className="rounded-lg border border-gray-200 bg-white p-5">
-                  <p className="text-sm font-bold uppercase text-primary-color">Pourquoi ce choix ?</p>
+                  <p className="text-sm font-bold uppercase text-primary-color">
+                    Pourquoi ce choix ?
+                  </p>
                   <div className="mt-4 space-y-3">
                     {result.details.strengths.map((strength) => (
-                      <p key={strength} className="flex items-start gap-3 text-sm leading-6 text-gray-600">
+                      <p
+                        key={strength}
+                        className="flex items-start gap-3 text-sm leading-6 text-gray-600"
+                      >
                         <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success-color" />
                         <span>{strength}</span>
                       </p>
@@ -604,7 +712,9 @@ export default function QuizPage() {
 
                 {alternativeProducts.length > 0 && (
                   <div className="rounded-lg border border-gray-200 bg-white p-5">
-                    <p className="text-sm font-bold uppercase text-primary-color">Autres pistes</p>
+                    <p className="text-sm font-bold uppercase text-primary-color">
+                      Autres pistes
+                    </p>
                     <div className="mt-4 space-y-3">
                       {alternativeProducts.map((product) => (
                         <Link
@@ -612,8 +722,12 @@ export default function QuizPage() {
                           href={`/product/${product.id}`}
                           className="block rounded-lg border border-gray-100 bg-background-dark p-3 transition-colors hover:border-primary-color"
                         >
-                          <p className="text-sm font-black text-primary-dark">{product.name}</p>
-                          <p className="mt-1 text-xs font-semibold text-primary-color">{getProductPriceRange(product)}</p>
+                          <p className="text-sm font-black text-primary-dark">
+                            {product.name}
+                          </p>
+                          <p className="mt-1 text-xs font-semibold text-primary-color">
+                            {getProductPriceRange(product)}
+                          </p>
                         </Link>
                       ))}
                     </div>
@@ -624,7 +738,9 @@ export default function QuizPage() {
           </div>
         ) : (
           <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-            <p className="font-bold text-primary-dark">Aucune recommandation disponible pour le moment.</p>
+            <p className="font-bold text-primary-dark">
+              Aucune recommandation disponible pour le moment.
+            </p>
             <button
               type="button"
               onClick={resetQuiz}
