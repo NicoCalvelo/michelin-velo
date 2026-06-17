@@ -36,6 +36,7 @@ function buildCreateData(form: ProductFormData) {
     description: form.description,
     bikeType: form.bikeType as BikeType[],
     variants,
+    status: "active" as const,
     tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : undefined,
     images: [] as StorageImage[],
   };

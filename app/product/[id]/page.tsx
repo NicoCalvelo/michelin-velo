@@ -7,8 +7,8 @@ import FilledButton from "@/app/_components/ui/Buttons/FilledButton";
 import OutlinedButton from "@/app/_components/ui/Buttons/OutlinedButton";
 import SearchBar from "@/app/_components/ui/Components/SearchBar";
 import Spinner from "@/app/_components/ui/Components/Spinner";
-import PublicProductCard from "./_components/PublicProductCard";
-import NavBar from "../_components/NavBar";
+import PublicProductCard from "@/app/product/_components/PublicProductCard";
+import NavBar from "@/app/_components/NavBar";
 
 const FILTERS = [
   { value: "all", label: "Tous" },

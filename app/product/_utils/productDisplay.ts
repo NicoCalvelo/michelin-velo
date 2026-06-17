@@ -16,7 +16,7 @@ export function getProductVariants(product: Product): ProductVariant[] {
 export function getFirstAvailableVariant(product: Product) {
   const variants = getProductVariants(product);
 
-  return variants.find((variant) => variant.stock > 0) ?? variants[0] ?? null;
+  return variants[0] || null;
 }
 
 export function getProductPriceRange(product: Product) {
@@ -32,10 +32,6 @@ export function getProductPriceRange(product: Product) {
   if (minPrice === maxPrice) return formatPrice(minPrice);
 
   return `${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`;
-}
-
-export function getTotalStock(product: Product) {
-  return getProductVariants(product).reduce((sum, variant) => sum + (variant.stock ?? 0), 0);
 }
 
 export function formatDimension(variant?: ProductVariant | null) {

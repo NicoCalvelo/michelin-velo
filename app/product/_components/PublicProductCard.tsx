@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowRight, ImageOff, ShieldCheck, Sparkles } from "lucide-react";
 import { Product } from "@/app/_models/product";
 import OutlinedCard from "@/app/_components/ui/Cards/OutlinedCard";
-import { getProductPriceRange, getTotalStock } from "../_utils/productDisplay";
+import { getProductPriceRange } from "../_utils/productDisplay";
 
 interface PublicProductCardProps {
   product: Product;
@@ -27,8 +27,7 @@ function getBikeTypeLabel(product: Product) {
 
 export default function PublicProductCard({ product }: PublicProductCardProps) {
   const mainImage = product.images?.[0];
-  const totalStock = getTotalStock(product);
-
+  
   return (
     <OutlinedCard className="group flex h-full flex-col overflow-hidden bg-white p-0 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary-color hover:shadow-md">
       <Link href={`/product/${product.id}`} className="flex h-full flex-col">

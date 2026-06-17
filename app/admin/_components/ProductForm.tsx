@@ -92,8 +92,6 @@ function toFormData(product?: Product): ProductFormData {
     };
   }
 
-  const dimension = product.dimension;
-
   return {
     name: product.name,
     slug: product.slug,
