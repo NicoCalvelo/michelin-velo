@@ -1,14 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Disc } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Disc, User } from "lucide-react";
+import OutlinedButton from "./ui/Buttons/OutlinedButton";
+import FilledButton from "./ui/Buttons/FilledButton";
+import Dropdown, { DropdownItem } from "./ui/Components/Dropdown";
+import { auth, signInWithGoogle, LogOut } from "@/app/_services/AuthService";
 
 export default function NavBar() {
   const pathname = usePathname();
-
+  const router = useRouter();
   const [show, setShow] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   const isActive = (path: string) => pathname === path;
 
@@ -32,6 +37,32 @@ export default function NavBar() {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Auth state listener
+  useEffect(() => {
+    if (!auth || typeof auth.onAuthStateChanged !== "function") return;
+    const unsub = auth.onAuthStateChanged((u) => {
+      setUser(u ?? null);
+    });
+
+    return () => unsub();
+  }, []);
+
+  const handleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (e) {
+      console.error("Sign-in error", e);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await LogOut();
+    } catch (e) {
+      console.error("Sign-out error", e);
+    }
+  };
 
   return (
     <header
@@ -68,9 +99,11 @@ export default function NavBar() {
           </Link>
 
           <Link
-            href="/challenges"
+            href="/expertise-michelin"
             className={`nav-link-michelin ${
-              isActive("/challenges") ? "font-bold text-primary-dark" : ""
+              isActive("/expertise-michelin")
+                ? "font-bold text-primary-dark"
+                : ""
             }`}
           >
             L’expertise Michelin
@@ -86,23 +119,64 @@ export default function NavBar() {
           </Link>
 
           <Link
-            href="/product"
+            href="/en-mouvement-pour-demain"
             className={`nav-link-michelin ${
-              isActive("/product") ? "font-bold text-primary-dark" : ""
+              isActive("/en-mouvement-pour-demain")
+                ? "font-bold text-primary-dark"
+                : ""
             }`}
           >
             En mouvement pour demain
           </Link>
         </nav>
 
-        {/* CTA */}
-        <div className="hidden md:block">
-          <Link href="/quiz" className="btn bg-secondary-color text-secondary-on hover:bg-secondary-dark">
+        {/* CTA + profile */}
+        <div className="hidden md:flex items-center gap-4">
+          <OutlinedButton onClick={() => router.push("/quiz")}>
             <span className="flex items-center gap-2">
               <Disc size={18} />
               Quel pneu est fait pour vous ?
             </span>
-          </Link>
+          </OutlinedButton>
+
+          <div>
+            <Dropdown
+              showArrow={false}
+              title={
+                (
+                  <span className="p-2 flex items-center justify-center">
+                    {user?.photoURL ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={user.photoURL}
+                        alt={user.displayName ?? "avatar"}
+                        className="w-8 h-8 object-cover rounded-full"
+                      />
+                    ) : (
+                      <User size={18} className="text-primary-dark" />
+                    )}
+                  </span>
+                ) as any
+              }
+            >
+              {user ? (
+                <>
+                  <DropdownItem onClick={() => router.push("/profile")}>
+                    Mon profil
+                  </DropdownItem>
+                  <DropdownItem onClick={handleSignOut}>
+                    Se déconnecter
+                  </DropdownItem>
+                </>
+              ) : (
+                <>
+                  <DropdownItem onClick={handleSignIn}>
+                    Se connecter
+                  </DropdownItem>
+                </>
+              )}
+            </Dropdown>
+          </div>
         </div>
       </div>
     </header>
