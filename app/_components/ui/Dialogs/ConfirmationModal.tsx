@@ -112,9 +112,9 @@ export default function ConfirmationModal() {
                     {info.icon}
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <h1 className="text-base font-bold leading-6" id="modal-title">
+                    <h6 className="text-base font-bold leading-6" id="modal-title">
                       {info.title}
-                    </h1>
+                    </h6>
                     <div className="mt-2">
                       <p className="text-sm text-text-light">{info.message}</p>
                     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Product } from "@/app/_models/product";
@@ -13,8 +13,8 @@ import { showDangerConfirmationModal } from "@/app/_components/ui/Dialogs/Confir
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [filtered, setFiltered] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -23,7 +23,6 @@ export default function AdminProductsPage() {
       setError(null);
       const data = await ProductRepository.getAllProducts(200);
       setProducts(data);
-      setFiltered(data);
     } catch {
       setError("Impossible de charger les produits.");
     } finally {
@@ -31,16 +30,17 @@ export default function AdminProductsPage() {
     }
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
-  const handleSearch = (query: string) => {
-    const q = query.toLowerCase();
-    setFiltered(
-      products.filter(
-        (p) => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q),
-      ),
+  const filtered = useMemo(() => {
+    if (!searchQuery) return products;
+    const lowerQuery = searchQuery.toLowerCase();
+    return products.filter(
+      (product) => product.name.toLowerCase().includes(lowerQuery) || product.brand.toLowerCase().includes(lowerQuery),
     );
-  };
+  }, [products, searchQuery]);
 
   const handleDelete = async (product: Product) => {
     try {
@@ -52,7 +52,6 @@ export default function AdminProductsPage() {
       );
       await ProductRepository.deleteProduct(product.id!);
       setProducts((prev) => prev.filter((p) => p.id !== product.id));
-      setFiltered((prev) => prev.filter((p) => p.id !== product.id));
     } catch {
       // User cancelled
     }
@@ -64,7 +63,9 @@ export default function AdminProductsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Produits</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{products.length} produit{products.length !== 1 ? "s" : ""}</p>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {products.length} produit{products.length !== 1 ? "s" : ""}
+          </p>
         </div>
         <Link href="/admin/products/new">
           <FilledButton hasIcon>
@@ -75,7 +76,7 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Search */}
-      <SearchBar onChange={handleSearch} placeholder="Rechercher par nom ou marque…" />
+      <SearchBar onChange={setSearchQuery} placeholder="Rechercher par nom ou marque…" />
 
       {/* States */}
       {loading && (
@@ -99,7 +100,7 @@ export default function AdminProductsPage() {
       {!loading && !error && filtered.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} onDelete={handleDelete} />
+            <ProductCard key={product.id} product={product} search={searchQuery} onDelete={handleDelete} />
           ))}
         </div>
       )}

@@ -218,38 +218,37 @@ export default function ProductForm({
           {/* ── Général ── */}
           <OutlinedCard className="p-5 space-y-4">
             <h3 className="font-semibold text-gray-800 mb-4!">Général</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormInput title="Nom du produit" value={form.name} setValue={set("name")} required id="name" />
-              <FormInput title="Marque" value={form.brand} setValue={set("brand")} required id="brand" />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormInput
-                title="Slug (URL)"
-                value={form.slug}
-                setValue={(v) => {
-                  set("slug")(v);
-                  setSlugEdited(true);
-                }}
-                id="slug"
-                supportingText="Auto-généré depuis le nom"
-              />
-              <FormInput
-                title="URL d'achat en ligne"
-                value={form.buyOnlineUrl}
-                setValue={set("buyOnlineUrl")}
-                id="buyOnlineUrl"
-                placeholder="https://example.com"
-              />
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-                <FormSelect
-                  options={statusItems}
-                  onChange={(id) => set("status")(id)}
-                  value={form.status}
-                  id="status"
-                />
-              </div>
-            </div>
+            <FormInput
+              title="Nom du produit"
+              value={form.name}
+              setValue={set("name")}
+              required
+              id="name"
+              className="w-full"
+            />
+            <FormInput
+              title="Marque"
+              value={form.brand}
+              setValue={set("brand")}
+              required
+              id="brand"
+              className="w-full"
+            />
+            <FormInput
+              title="URL d'achat en ligne"
+              value={form.buyOnlineUrl}
+              setValue={set("buyOnlineUrl")}
+              id="buyOnlineUrl"
+              className="w-full"
+              placeholder="https://example.com"
+            />
+            <FormSelect
+              options={statusItems}
+              title="Statut"
+              onChange={(id) => set("status")(id)}
+              value={form.status}
+              id="status"
+            />
           </OutlinedCard>
 
           {/* ── Descriptions ── */}
@@ -276,7 +275,21 @@ export default function ProductForm({
               value={form.tags}
               setValue={set("tags")}
               id="tags"
+              className="w-full"
               placeholder="tubeless, slick, 700c"
+            />
+          </OutlinedCard>
+
+          {/* ── Images ── */}
+          <OutlinedCard className="p-5 space-y-4">
+            <h3 className="font-semibold text-gray-800 mb-4!">Images</h3>
+            <ImageManager
+              existingImages={existingImages}
+              pendingFiles={pendingFiles}
+              onExistingReorder={setExistingImages}
+              onExistingDelete={handleExistingDelete}
+              onNewFiles={(files) => setPendingFiles((prev) => [...prev, ...files])}
+              onPendingDelete={handlePendingDelete}
             />
           </OutlinedCard>
 
@@ -307,7 +320,7 @@ export default function ProductForm({
 
         <Column className="flex-1 gap-4">
           {/* ── Déclinaisons ── */}
-          <OutlinedCard className="p-5 space-y-4">
+          <div className="p-5 space-y-4">
             <div className="flex items-center justify-between gap-2">
               <h3 className="font-semibold text-gray-800">Déclinaisons</h3>
               <FilledButton type="button" hasIcon onClick={addVariant} className="py-2! px-3! text-sm!">
@@ -451,20 +464,7 @@ export default function ProductForm({
                 </OutlinedCard>
               ))}
             </div>
-          </OutlinedCard>
-
-          {/* ── Images ── */}
-          <OutlinedCard className="p-5 space-y-4">
-            <h3 className="font-semibold text-gray-800 mb-4!">Images</h3>
-            <ImageManager
-              existingImages={existingImages}
-              pendingFiles={pendingFiles}
-              onExistingReorder={setExistingImages}
-              onExistingDelete={handleExistingDelete}
-              onNewFiles={(files) => setPendingFiles((prev) => [...prev, ...files])}
-              onPendingDelete={handlePendingDelete}
-            />
-          </OutlinedCard>
+          </div>
         </Column>
       </div>
 

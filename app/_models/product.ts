@@ -2,7 +2,7 @@ import { StorageImage } from "../_interfaces/storage";
 import { Timestamp } from "firebase/firestore";
 import PRODUCT_STATUS from "@/app/_data/product_status.json";
 
-export type BikeType = "road" | "mountain" | "gravel" | "city" | "bmx" | "electric";
+export type BikeType = "road" | "mountain" | "enduro" | "e-enduro" | "gravel" | "city" | "bmx" | "electric";
 
 export interface ProductDimension {
   diameter: number; // ex: 700 (en mm) ou 26, 27.5, 29 (en pouces)
