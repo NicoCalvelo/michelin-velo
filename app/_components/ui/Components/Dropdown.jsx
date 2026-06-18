@@ -9,7 +9,7 @@ export default function Dropdown({
 }) {
   return (
     <Menu as="div" className={"relative z-10 " + className}>
-      <MenuButton className="font-medium text-sm space-x-3 rounded bg-[var(--yellow-ref)] hover:bg-[var(--yellow-ref)] py-2 px-2 disable:bg-background-dark disabled:opacity-50 cursor-pointer flex items-center">
+      <MenuButton className="font-medium text-sm space-x-3 rounded py-2 px-2 disable:bg-background-dark disabled:opacity-50 cursor-pointer flex items-center">
         <span className="flex items-center">{title}</span>
         {showArrow && (
           <svg
@@ -28,7 +28,7 @@ export default function Dropdown({
       </MenuButton>
       <MenuItems
         as="ul"
-        className="absolute overflow-clip w-fit rounded bg-background-color shadow-lg right-0 top-10"
+        className="absolute overflow-clip w-fit rounded bg-background-color outline-0 shadow-xl right-0 top-10"
       >
         {props.children}
       </MenuItems>
@@ -48,7 +48,7 @@ export function DropdownItem({
       as="li"
       onClick={onClick}
       className={
-        "px-4 py-1.5 ui-disabled:text-text-light cursor-pointer ui-disabled:bg-background-dark ui-active:text-primary-on ui-active:bg-primary-light " +
+        "px-6 py-3 ui-disabled:text-text-light cursor-pointer whitespace-nowrap font-bold hover:bg-slate-100 ui-disabled:bg-background-dark ui-active:text-primary-on ui-active:bg-primary-light " +
         className
       }
     >

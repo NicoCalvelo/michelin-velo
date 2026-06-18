@@ -2,14 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  Award,
-  Filter,
-  Leaf,
-  RotateCcw,
-  ShieldCheck,
-  ShoppingBag,
-} from "lucide-react";
+import { Award, Filter, Leaf, RotateCcw, ShieldCheck, ShoppingBag } from "lucide-react";
 import { Product } from "@/app/_models/product";
 import SearchBar from "@/app/_components/ui/Components/SearchBar";
 import Spinner from "@/app/_components/ui/Components/Spinner";
@@ -70,8 +63,7 @@ export default function ProductsPage() {
       }
 
       try {
-        const { default: ProductRepository } =
-          await import("@/app/_repositories/product_repository");
+        const { default: ProductRepository } = await import("@/app/_repositories/product_repository");
         const data = await ProductRepository.getActiveProducts(100);
 
         if (!mounted) return;
@@ -97,8 +89,7 @@ export default function ProductsPage() {
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     return products.filter((product) => {
-      const matchesFilter =
-        activeFilter === "all" || product.bikeType.includes(activeFilter);
+      const matchesFilter = activeFilter === "all" || product.bikeType.includes(activeFilter);
       const searchable = [
         product.name,
         product.brand,
@@ -116,57 +107,31 @@ export default function ProductsPage() {
   return (
     <main className="min-h-screen bg-background-dark">
       <section className="bg-primary-dark text-primary-on">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-14">
+        <div className="mx-auto flex flex-row items-end max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-14">
           <div className="flex flex-col justify-center gap-6">
             <div className="space-y-4">
               <h1 className="max-w-3xl text-4xl font-black leading-tight text-white sm:text-5xl">
                 Trouvez le pneu qui suit votre rythme.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-primary-light sm:text-lg">
-                Vous roulez pour gagner du temps, garder le contrôle ou partir
-                plus loin. Choisissez selon votre pratique, comparez les
-                bénéfices, puis passez à l&apos;achat en ligne sans détour.
+                Vous roulez pour gagner du temps, garder le contrôle ou partir plus loin. Choisissez selon votre
+                pratique, comparez les bénéfices, puis passez à l&apos;achat en ligne sans détour.
               </p>
             </div>
-
-            <FilledButton onClick={() => router.push("/quiz")}>
-              Quel pneu pour moi ?
-            </FilledButton>
           </div>
-
-          <div className="grid content-center gap-3 rounded-lg border border-white/15 bg-white/10 p-4 shadow-light">
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              {PRACTICE_HIGHLIGHTS.map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-lg bg-white p-4 text-primary-dark"
-                >
-                  <p className="text-xs font-bold uppercase text-primary-color">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-lg font-black">{item.value}</p>
-                  <p className="mt-2 text-xs leading-5 text-gray-600">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <FilledButton onClick={() => router.push("/quiz")} className="ml-auto h-fit">
+            Repondre au quiz pour trouver le pneu idéal
+          </FilledButton>
         </div>
       </section>
 
-      <section
-        id="catalogue"
-        className="mx-auto max-w-7xl scroll-mt-24 px-4 pt-8 sm:px-6 lg:px-8"
-      >
+      <section id="catalogue" className="mx-auto max-w-7xl scroll-mt-24 px-4 pt-8 sm:px-6 lg:px-8">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-bold uppercase text-primary-color">
               {products ? "Catalogue" : "Aperçu avec produit de démonstration"}
             </p>
-            <h2 className="mt-1 text-2xl font-black text-primary-dark">
-              Produits recommandés
-            </h2>
+            <h2 className="mt-1 text-2xl font-black text-primary-dark">Produits recommandés</h2>
           </div>
 
           <SearchBar
@@ -202,9 +167,7 @@ export default function ProductsPage() {
 
         {!loading && filteredProducts.length === 0 && (
           <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-            <p className="font-bold text-primary-dark">
-              Aucun produit ne correspond à votre recherche.
-            </p>
+            <p className="font-bold text-primary-dark">Aucun produit ne correspond à votre recherche.</p>
             <button
               type="button"
               onClick={() => {
@@ -222,10 +185,7 @@ export default function ProductsPage() {
         {!loading && filteredProducts.length > 0 && (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProducts.map((product) => (
-              <PublicProductCard
-                key={product.id ?? product.slug}
-                product={product}
-              />
+              <PublicProductCard key={product.id ?? product.slug} product={product} />
             ))}
           </div>
         )}
